@@ -4,6 +4,7 @@ Floatable[] thingies;
 Star[] nebula;
 int thingiesLength;
 int starLength;
+boolean blink, doneBlinking;
 
 public void setup() 
 {
@@ -64,9 +65,9 @@ class SpaceShip extends Floater implements Floatable
       yCorners[0] = 0;
       yCorners[1] = -4;
       yCorners[2] = -8;
-      yCorners[3] = -6;
+      yCorners[3] = -10;
       yCorners[4] = 0;
-      yCorners[5] = 6;
+      yCorners[5] = 10;
       yCorners[6] = 8;
       yCorners[7] = 4;
 
@@ -78,7 +79,9 @@ class SpaceShip extends Floater implements Floatable
       myPointDirection = 0;
     }
 
+    /*public void show() {
 
+    }*/
     
 }
 
@@ -95,31 +98,32 @@ class Star
   public void setY(int y) {myY = y;}
   public int getY() {return (int)myY;}
   public void show() {
-    quad( (float)(myX + 1), (float)myY, (float)myX, (float)(myY -1), (float)(myX -1), (float)myY, (float)myX, (float)(myY + 1) );
+    noStroke();
+    fill(255);
+    quad( (int)(myX + 1), (int)myY, (int)myX, (int)(myY -1), (int)(myX -1), (int)myY, (int)myX, (int)(myY + 1) );
   }
 
 }
 
-/*class Star extends Floater implements Floatable
+class Blinker extends Floater implements Floatable
 {
-  public Star()
+  public Blinker()
   {
     corners = 4;
     xCorners = new int[4];
     yCorners = new int[4];
-
     xCorners[0] = 1;
     xCorners[1] = 0;
     xCorners[2] = -1;
     xCorners[3] = 0;
-
     yCorners[0] = 0;
     yCorners[1] = -1;
     yCorners[2] = 0;
     yCorners[3] = 1;
-    myColor = color(0, 150, 255);
-    myCenterX = Math.random()*width;
-    myCenterY = Math.random()*height;
+
+    myColor = color(0, 0, 255);
+    myCenterX = -10;
+    myCenterY = -10;
     myDirectionX = 0;
     myDirectionY = 0;
     myPointDirection = 0;
@@ -135,7 +139,35 @@ class Star
   public void setPointDirection(int degrees) {myPointDirection = degrees;}
   public double getPointDirection() {return myPointDirection;}
 
-}*/
+  public void move() {
+    if (blink) {
+      myCenterX = ((SpaceShip)thingies[0]).myCenterX;
+      myCenterY = ((SpaceShip)thingies[0]).myCenterY;
+      myPointDirection = ((SpaceShip)thingies[0]).myPointDirection - 180;
+      blink = false;
+    } else {
+    myCenterX += myDirectionX;    
+    myCenterY += myDirectionY;     
+    }
+
+
+    if(myCenterX >width)
+    {     
+      myCenterX = 0;    
+    } else if (myCenterX<0)
+    {     
+      myCenterX = width;    
+    }    
+    if(myCenterY >height)
+    {    
+      myCenterY = 0;    
+    }  else if (myCenterY < 0)
+    {     
+      myCenterY = height;      
+    }
+  }
+}
+
 
 abstract class Floater //Do NOT modify the Floater class! Make changes in the SpaceShip class 
 {   
@@ -211,8 +243,6 @@ abstract class Floater //Do NOT modify the Floater class! Make changes in the Sp
       vertex(xRotatedTranslated,yRotatedTranslated);    
     }   
     endShape(CLOSE); 
-    //REMEMBER TO REMOVE
-    System.out.println(myCenterX +", " + myCenterY); 
   }   
 } 
 
