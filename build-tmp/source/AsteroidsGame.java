@@ -26,12 +26,15 @@ public void setup()
 {
   //your code here
   size(1000, 700);
-  thingiesLength = 1;
+  thingiesLength = 12;
   starLength = 100;
   //normandy = new SpaceShip();
   thingies = new Floatable[thingiesLength];
   nebula = new Star[starLength];
   thingies[0] = new SpaceShip();
+  for (int i = 1; i < thingies.length; i ++) {
+    thingies[i] = new Asteroid();
+  }
   for (int i = 0; i < starLength; i ++) {
     nebula[i] = new Star();
   }
@@ -41,13 +44,14 @@ public void draw()
 {
   //your code here
   background(0);
-  //normandy.move();
-  //normandy.show();
-  thingies[0].move();
-  thingies[0].show();
   for (int i = 0; i < starLength; i ++) {
     nebula[i].show();
   }
+  for (int i = 0; i < thingies.length; i ++) {
+    thingies[i].move();
+    thingies[i].show();
+  }
+  
 }
 class SpaceShip extends Floater implements Floatable
 {   
@@ -65,27 +69,13 @@ class SpaceShip extends Floater implements Floatable
 
     public SpaceShip()
     {
-      corners = 8;
-      xCorners = new int[8];
-      yCorners = new int[8];
+      corners = 22;
+      
+      int[] setXArray = {16, 4, 8, 8, 0, -8, -8, -12, -12, -8, -8, -12, -8, -8, -12, -12, -8, -8, 0, 8, 8, 4};
+      int[] setYArray = {0, 8, 8, 12, 12, 20, 12, 12, 8, 8, 4, 0, -4, -8, -8, -12, -12, -20, -12, -12, -8, -8};    
 
-
-      xCorners[0] = 16;
-      xCorners[1] = 2;
-      xCorners[2] = -4;
-      xCorners[3] = -4;
-      xCorners[4] = 0;
-      xCorners[5] = -4;
-      xCorners[6] = -4;
-      xCorners[7] = 2;
-      yCorners[0] = 0;
-      yCorners[1] = -4;
-      yCorners[2] = -8;
-      yCorners[3] = -10;
-      yCorners[4] = 0;
-      yCorners[5] = 10;
-      yCorners[6] = 8;
-      yCorners[7] = 4;
+      xCorners = setXArray;
+      yCorners = setYArray;
 
       myColor = color(0, 0, 255);
       myCenterX = 300;
@@ -95,9 +85,28 @@ class SpaceShip extends Floater implements Floatable
       myPointDirection = 0;
     }
 
-    /*public void show() {
+    public void accelerate(float accelMod) {
+      //double checkOnSpeed = Math.sqrt( ( ((float)myDirectionX) * ((float)myDirectionX) ) + ( ((float)myDirectionY) * ((float)myDirectionY) ) );
+      //Math.sin(myDirectionY) < 1 || Math.sin(myDirectionY) > -1 
+      //(myDirectionX < 2 && myDirectionX > -2) && (myDirectionY > -2 && myDirectionY < 2)
+      /* PROBELM: If pass limit, can't go down b/c accel; disabled. SOLUTION: if pass limit, then set *something* lower. */
+      int limit = 6;
 
-    }*/
+      if ( (myDirectionX < limit && myDirectionX > -limit) && (myDirectionY > -limit && myDirectionY < limit) ) {
+        super.accelerate(accelMod);
+      } else {
+        if (myDirectionX > limit) {
+          myDirectionX = limit - 1;
+        } else if (myDirectionX < -limit) {
+          myDirectionX = -limit + 1;
+        } else if (myDirectionY > limit) {
+          myDirectionY = limit - 1;
+        } else if (myDirectionY < -limit) {
+          myDirectionY = -limit + 1;
+        }
+      }
+
+    }
     
 }
 
@@ -121,7 +130,7 @@ class Star
 
 }
 
-class Blinker extends Floater implements Floatable
+/*class Blinker extends Floater implements Floatable
 {
   public Blinker()
   {
@@ -182,7 +191,62 @@ class Blinker extends Floater implements Floatable
       myCenterY = height;      
     }
   }
+}*/
+
+class Asteroid extends Floater implements Floatable
+{
+  private double myRotSpeed;
+  public Asteroid()
+  {
+    corners = 6;
+
+    xCorners = new int[6];
+    yCorners = new int[6];
+
+    xCorners[0] = 16;
+    xCorners[1] = 12;
+    xCorners[2] = 0;
+    xCorners[3] = -24;
+    xCorners[4] = -32;
+    xCorners[5] = -8;
+    yCorners[0] = 12;
+    yCorners[1] = -20;
+    yCorners[2] = -12;
+    yCorners[3] = -24;
+    yCorners[4] = 4;
+    yCorners[5] = 24;
+
+
+    myColor = color(0, 0, 255, 100);
+    myCenterX = Math.random()*width;
+    myCenterY = Math.random()*height;
+    myDirectionX = (Math.random()*3)-1.5f;
+    myDirectionY = (Math.random()*3)-1.5f;
+    myPointDirection = Math.random()*360;
+
+    myRotSpeed = (Math.random()*6)-3;
+  }
+  public void setX(int x) {myCenterX = x;}
+  public int getX() {return (int)myCenterX;}
+  public void setY(int y) {myCenterY = y;}
+  public int getY() {return (int)myCenterY;}
+  public void setDirectionX(double x) {myDirectionX = x;}
+  public double getDirectionX() {return myDirectionX;}
+  public void setDirectionY(double y) {myDirectionY = y;}
+  public double getDirectionY() {return myDirectionY;}
+  public void setPointDirection(int degrees) {myPointDirection = degrees;}
+  public double getPointDirection() {return myPointDirection;}
+
+
+  public void move() {
+    rotate( (int)myRotSpeed );
+    super.move();
+  }
+
 }
+
+
+
 
 
 abstract class Floater //Do NOT modify the Floater class! Make changes in the SpaceShip class 
@@ -273,8 +337,13 @@ public void keyPressed() {
     ((SpaceShip)thingies[0]).rotate(-8);
   } else if (key == 'd' || key =='D') {
     ((SpaceShip)thingies[0]).rotate(8);
-  } else if (key == 's' || key == 'S' || key == 'w' || key == 'W') {
-    ((SpaceShip)thingies[0]).accelerate(1);
+  } else if (key == 'w' || key == 'W') {
+    
+      ((SpaceShip)thingies[0]).accelerate(0.5f);
+    
+
+  } else if (key == 's' || key == 'S' ) {
+    ((SpaceShip)thingies[0]).accelerate(-0.5f);
   } else if (keyCode == 32) {
     ((SpaceShip)thingies[0]).setX((int)(Math.random()*width));
     ((SpaceShip)thingies[0]).setY((int)(Math.random()*height));
@@ -283,6 +352,15 @@ public void keyPressed() {
     ((SpaceShip)thingies[0]).setDirectionY(0);
   }
 }
+
+
+//TO Do
+/*
+Change the shape of the spaceship. Diamond with two wings. YAY!
+Make the spaceship have a drive. Ambitious particle drive v.s. color change?
+Shape of Asteroids.
+Make hyperspace a limited resource later on, a way to escape a crisis. Powerups?
+*/
   static public void main(String[] passedArgs) {
     String[] appletArgs = new String[] { "AsteroidsGame" };
     if (passedArgs != null) {
