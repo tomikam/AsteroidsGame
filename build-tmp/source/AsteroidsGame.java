@@ -44,6 +44,7 @@ public void draw()
 {
   //your code here
   background(0);
+  controlAccel();
   for (int i = 0; i < starLength; i ++) {
     nebula[i].show();
   }
@@ -51,7 +52,6 @@ public void draw()
     thingies[i].move();
     thingies[i].show();
   }
-  
 }
 class SpaceShip extends Floater implements Floatable
 {   
@@ -95,13 +95,13 @@ class SpaceShip extends Floater implements Floatable
       if ( (myDirectionX < limit && myDirectionX > -limit) && (myDirectionY > -limit && myDirectionY < limit) ) {
         super.accelerate(accelMod);
       } else {
-        if (myDirectionX > limit) {
+        if (myDirectionX >= limit) {
           myDirectionX = limit - 1;
-        } else if (myDirectionX < -limit) {
+        } else if (myDirectionX <= -limit) {
           myDirectionX = -limit + 1;
-        } else if (myDirectionY > limit) {
+        } else if (myDirectionY >= limit) {
           myDirectionY = limit - 1;
-        } else if (myDirectionY < -limit) {
+        } else if (myDirectionY <= -limit) {
           myDirectionY = -limit + 1;
         }
       }
@@ -332,19 +332,26 @@ interface Floatable
   public void show();
 }
 
+boolean aIsPressed = false;
+boolean sIsPressed = false;
+boolean dIsPressed = false;
+boolean wIsPressed = false;
+boolean spaceIsPressed = false;
+
+
+
 public void keyPressed() {
   if (key == 'a' || key == 'A') {
-    ((SpaceShip)thingies[0]).rotate(-8);
+    aIsPressed = true;
   } else if (key == 'd' || key =='D') {
-    ((SpaceShip)thingies[0]).rotate(8);
+    dIsPressed = true;
   } else if (key == 'w' || key == 'W') {
-    
-      ((SpaceShip)thingies[0]).accelerate(0.5f);
-    
-
-  } else if (key == 's' || key == 'S' ) {
-    ((SpaceShip)thingies[0]).accelerate(-0.5f);
-  } else if (keyCode == 32) {
+    wIsPressed = true;
+  } else if (key == 's' || key == 'S') {
+    sIsPressed = true;
+  } /*else if (keyCode == 32) {
+    spaceIsPressed = true;
+  }*/else if (key == 32) {
     ((SpaceShip)thingies[0]).setX((int)(Math.random()*width));
     ((SpaceShip)thingies[0]).setY((int)(Math.random()*height));
     ((SpaceShip)thingies[0]).setPointDirection((int)(Math.random()*360));
@@ -352,6 +359,34 @@ public void keyPressed() {
     ((SpaceShip)thingies[0]).setDirectionY(0);
   }
 }
+
+public void keyReleased() {
+  if (key == 'a' || key == 'A') {
+    aIsPressed = false;
+  } else if (key == 'd' || key =='D') {
+    dIsPressed = false;
+  } else if (key == 'w' || key == 'W') {
+    wIsPressed = false;
+  } else if (key == 's' || key == 'S') {
+    sIsPressed = false;
+  } else if (keyCode == 32) {
+    spaceIsPressed = false;
+  }
+}
+
+public void controlAccel() {
+  if (wIsPressed) {
+    ((SpaceShip)thingies[0]).accelerate(0.3f);
+  } else if (sIsPressed) {
+    ((SpaceShip)thingies[0]).accelerate(-0.3f);
+  } else if (aIsPressed) {
+    ((SpaceShip)thingies[0]).rotate(-8);
+  } else if (dIsPressed) {
+    ((SpaceShip)thingies[0]).rotate(8);
+  } 
+}
+
+
 
 
 //TO Do
