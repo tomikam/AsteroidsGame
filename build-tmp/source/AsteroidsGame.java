@@ -21,14 +21,19 @@ Star[] nebula;
 int thingiesLength;
 int starLength;
 boolean blink, doneBlinking;
+Blinker[] blinkers;
+boolean menu, game;
+
 
 public void setup() 
 {
-  //your code here
+  
+  menu = true;
+  //GAME SETUP
   size(1000, 700);
   thingiesLength = 12;
   starLength = 100;
-  //normandy = new SpaceShip();
+  blinkers = new Blinker[10];
   thingies = new Floatable[thingiesLength];
   nebula = new Star[starLength];
   thingies[0] = new SpaceShip();
@@ -38,21 +43,44 @@ public void setup()
   for (int i = 0; i < starLength; i ++) {
     nebula[i] = new Star();
   }
+  for (int i = 0; i < 10; i ++) {
+    blinkers[i] = new Blinker();
+  }
   
 }
 public void draw() 
 {
   //your code here
-  background(0);
-  controlAccel();
-  for (int i = 0; i < starLength; i ++) {
-    nebula[i].show();
-  }
-  for (int i = 0; i < thingies.length; i ++) {
-    thingies[i].move();
-    thingies[i].show();
+  if (game) {
+    background(0);
+    controlAccel();
+    for (int i = 0; i < starLength; i ++) {
+      nebula[i].show();
+    }
+    for (int i = 0; i < thingies.length; i ++) {
+      thingies[i].move();
+      thingies[i].show();
+    }
+    for (int i = 0; i < blinkers.length; i ++) {
+      blinkers[i].move();
+      blinkers[i].show();
+    }
+  } else if (menu) {
+    background(0);
+    textSize(150);
+    stroke(0, 0, 255);
+    fill(0, 0, 255);
+    text("Asteroids", 100, 300);
+    textSize(50);
+    text("Thomas White", 100, 500);
+    textSize(30);
+    text("Click to 'play' - (even though it's not really a game yet)", 100, 600);
   }
 }
+  
+
+
+
 class SpaceShip extends Floater implements Floatable
 {   
     //your code here
@@ -130,21 +158,22 @@ class Star
 
 }
 
-/*class Blinker extends Floater implements Floatable
+class Blinker extends Floater implements Floatable
 {
+  int timeCounter;
   public Blinker()
   {
     corners = 4;
     xCorners = new int[4];
     yCorners = new int[4];
-    xCorners[0] = 1;
+    xCorners[0] = 3;
     xCorners[1] = 0;
-    xCorners[2] = -1;
+    xCorners[2] = -3;
     xCorners[3] = 0;
     yCorners[0] = 0;
-    yCorners[1] = -1;
+    yCorners[1] = -3;
     yCorners[2] = 0;
-    yCorners[3] = 1;
+    yCorners[3] = 3;
 
     myColor = color(0, 0, 255);
     myCenterX = -10;
@@ -152,6 +181,7 @@ class Star
     myDirectionX = 0;
     myDirectionY = 0;
     myPointDirection = 0;
+    timeCounter = 0;
   }
   public void setX(int x) {myCenterX = x;}
   public int getX() {return (int)myCenterX;}
@@ -165,16 +195,18 @@ class Star
   public double getPointDirection() {return myPointDirection;}
 
   public void move() {
-    if (blink) {
+    if (blink && (Math.random() > .9f)   ) {
       myCenterX = ((SpaceShip)thingies[0]).myCenterX;
       myCenterY = ((SpaceShip)thingies[0]).myCenterY;
       myPointDirection = ((SpaceShip)thingies[0]).myPointDirection - 180;
+      myDirectionX = - ((SpaceShip)thingies[0]).myDirectionX;
+      myDirectionY = - ((SpaceShip)thingies[0]).myDirectionY;
+      timeCounter = 0;
       blink = false;
     } else {
     myCenterX += myDirectionX;    
     myCenterY += myDirectionY;     
     }
-
 
     if(myCenterX >width)
     {     
@@ -190,8 +222,17 @@ class Star
     {     
       myCenterY = height;      
     }
+
+    timeCounter ++;
   }
-}*/
+  public void show() {
+    double plumeLength = sqrt( (float)( ((SpaceShip)thingies[0]).myDirectionY*((SpaceShip)thingies[0]).myDirectionY ) + (float)( ((SpaceShip)thingies[0]).myDirectionX * ((SpaceShip)thingies[0]).myDirectionX ) );
+
+    if (timeCounter < (int)plumeLength*4) {
+      super.show();
+    }
+  }
+}
 
 class Asteroid extends Floater implements Floatable
 {
@@ -338,6 +379,40 @@ boolean dIsPressed = false;
 boolean wIsPressed = false;
 boolean spaceIsPressed = false;
 
+public class Button
+{
+  protected int myX, myY, myWidth, myHeight, myRightBound, myBottomBound;
+  protected String myText;
+  public Button() {
+    myX = 0; myY = 0; myWidth = 0; myHeight = 0; myText = "test";
+  }
+  public Button(int x, int y, int wid, int hgt, String txt) {
+    myX = x;
+    myY = y;
+    myWidth = wid;
+    myHeight = hgt;
+    myText = txt;
+  }
+  public void setX(int x) {myX = x;}
+  public int getX() {return myX;}
+  public void setY(int y) {myY = y;}
+  public int getY() {return myY;}
+  public void setWidth(int wid) {myWidth = wid;}
+  public int getWidth() {return myWidth;}
+  public void setHeight(int hgt) {myHeight = hgt;}
+  public int getHeight() {return myHeight;}
+  public void setText(String txt) {myText = txt;}
+  public String getText() {return myText;}
+
+  public void show() {
+    fill(0, 0, 255);
+    rect(myX, myY, myWidth, myHeight);
+    textSize(myHeight/2);
+    fill(0);
+    text(myText, myX + width/5, myY + width/5);
+  }
+
+}
 
 
 public void keyPressed() {
@@ -377,22 +452,45 @@ public void keyReleased() {
 public void controlAccel() {
   if (wIsPressed) {
     ((SpaceShip)thingies[0]).accelerate(0.3f);
+    blink = true;
   } else if (sIsPressed) {
     ((SpaceShip)thingies[0]).accelerate(-0.3f);
+    blink = true;
   } else if (aIsPressed) {
     ((SpaceShip)thingies[0]).rotate(-8);
   } else if (dIsPressed) {
     ((SpaceShip)thingies[0]).rotate(8);
-  } 
+  } else if (wIsPressed && aIsPressed) {
+    ((SpaceShip)thingies[0]).accelerate(0.3f);
+    blink = true;
+    ((SpaceShip)thingies[0]).rotate(-8);
+  } else if (wIsPressed && dIsPressed) {
+    ((SpaceShip)thingies[0]).accelerate(0.3f);
+    blink = true;
+    ((SpaceShip)thingies[0]).rotate(8);
+  } else if (sIsPressed && aIsPressed) {
+    ((SpaceShip)thingies[0]).accelerate(-0.3f);
+    blink = true;
+    ((SpaceShip)thingies[0]).rotate(-8);
+  } else if (sIsPressed && dIsPressed) {
+    ((SpaceShip)thingies[0]).accelerate(-0.3f);
+    blink = true;
+    ((SpaceShip)thingies[0]).rotate(8);
+  }
 }
 
-
-
+public void mousePressed() {
+  if (menu) {
+    menu = false;
+    game = true;
+  }
+}
 
 //TO Do
 /*
 Change the shape of the spaceship. Diamond with two wings. YAY!
-Make the spaceship have a drive. Ambitious particle drive v.s. color change?
+Make the spaceship have a drive. Ambitious particle drive v.s. color change? YAY!
+Make sure the simultanious keyu presses are dealt with. 
 Shape of Asteroids.
 Make hyperspace a limited resource later on, a way to escape a crisis. Powerups?
 */
