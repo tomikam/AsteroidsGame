@@ -15,7 +15,8 @@ int sceneCounter;
 public void setup() 
 {
   
-  menu = true;
+  //menu = true;
+  game = true;
   sceneCounter = 0;
   //GAME SETUP
   size(1000, 700);
