@@ -43,7 +43,7 @@ public void setup()
   nebula = new Star[starLength];
   thingies[0] = new SpaceShip();
   scene1 = new Scene(1, "Wake up, Eva.", "What's going on?", 0, "Who are you?", 2, "Where am I?", 3, 3);
-  scene2 = new Scene(2, "Don't worry, let's just try again.", "N/A", 0, "N/A", 2, "N/A", 3, 0);
+  scene2 = new Scene(2, "Don't worry, let's just try again. We have plenty of time.", "N/A", 0, "N/A", 2, "N/A", 3, 0);
   note1 = new Note(300, 35, 350, 100, "Test test test test test test test test test test test", 100, 20);
   scenes = new ArrayList();
   notes = new ArrayList();
@@ -567,7 +567,7 @@ public class Scene
     textSize(40);
     fill(0, 0, 255);
     stroke(0, 0, 255);
-    text(myText, 100, 100);
+    text(myText, 100, 100, 800, 400);
 
     if (answerNum == 0) {
       textSize(10);
@@ -710,6 +710,7 @@ If scene mode is active, the MousePressed function checks to see which scene is 
 Fix and simplfy the arraylist.
 Get rid of the interface, it overcomplicates things. 
 Simplify everything into component functions. 
+Farther collision distance.
 
 
 ASK MR. SIMON: do subclasses need a constructor if they change no variables?
