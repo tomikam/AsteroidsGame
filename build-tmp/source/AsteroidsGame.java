@@ -43,7 +43,7 @@ public void setup()
   nebula = new Star[starLength];
   thingies[0] = new SpaceShip();
   scene1 = new Scene(1, "Wake up, Eva.", "What's going on?", 0, "Who are you?", 2, "Where am I?", 3, 3);
-  scene2 = new Scene(2, "Test", "N/A", 0, "N/A", 2, "N/A", 3, 3);
+  scene2 = new Scene(2, "Don't worry, let's just try again.", "N/A", 0, "N/A", 2, "N/A", 3, 0);
   note1 = new Note(300, 35, 350, 100, "Test test test test test test test test test test test", 100, 20);
   scenes = new ArrayList();
   notes = new ArrayList();
@@ -653,17 +653,24 @@ public void mousePressed() {
     menu = false;
     dialouge = true;
   } else if (dialouge) {
-      if (checkIfInside(buttonOne)) {
-        if ( ((Scene)(scenes.get(0))).getChoiceOne() == 0) {
-            game = true;
-            dialouge = false;
-        } else {
-          for (int i = 0; i < scenes.size(); i ++) {
-            if ( ((Scene)(scenes.get(i))).getIndex() == ((Scene)(scenes.get(0))).getChoiceOne()) {
-              scenes.add( ((Scene)(scenes.get(i))) );
+      if ( ((Scene)(scenes.get(0))).getAnswerNum() == 0 ) {
+        game = true;
+        dialouge = false;
+      } else if ( ((Scene)(scenes.get(0))).getAnswerNum() > 0 ) {
+
+        if (checkIfInside(buttonOne)) {
+          if ( ((Scene)(scenes.get(0))).getChoiceOne() == 0) {
+              game = true;
+              dialouge = false;
+          } else {
+            for (int i = 0; i < scenes.size(); i ++) {
+              if ( ((Scene)(scenes.get(i))).getIndex() == ((Scene)(scenes.get(0))).getChoiceOne()) {
+                scenes.add( ((Scene)(scenes.get(i))) );
+              }
             }
           }
         }
+
       }
   }
 }
@@ -699,6 +706,11 @@ Make a scene class which displays text in three places as well as text along the
 The scenes will get an arraylist. 
 Three buttons are made, in positions One, Two and Three. 
 If scene mode is active, the MousePressed function checks to see which scene is active, then which button is pressed, and pushes that scenes's choiceOne to position 0 of the Array. 
+
+Fix and simplfy the arraylist.
+Get rid of the interface, it overcomplicates things. 
+Simplify everything into component functions. 
+
 
 ASK MR. SIMON: do subclasses need a constructor if they change no variables?
 
