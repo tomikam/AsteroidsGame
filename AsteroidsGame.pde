@@ -1,27 +1,39 @@
-//your variable declarations here
-//SpaceShip normandy;
 Floatable[] thingies;
 Star[] nebula;
 int thingiesLength;
 int starLength;
 boolean blink, doneBlinking;
 Blinker[] blinkers;
-boolean menu, game;
+boolean menu, game, dialouge;
+Button startButton, buttonOne, buttonTwo, buttonThree;
+ArrayList scenes, notes;
+Scene scene1, scene2;
+Note note1;
+int sceneCounter;
 
 
 public void setup() 
 {
   
   menu = true;
+  sceneCounter = 0;
   //GAME SETUP
   size(1000, 700);
-  thingiesLength = 12;
+  thingiesLength = 12; //Declare Arrays
   starLength = 100;
+
   blinkers = new Blinker[10];
   thingies = new Floatable[thingiesLength];
   nebula = new Star[starLength];
   thingies[0] = new SpaceShip();
-  for (int i = 1; i < thingies.length; i ++) {
+  scene1 = new Scene(1, "Wake up, Eva.", "What's going on?", 0, "Who are you?", 2, "Where am I?", 3, 3);
+  scene2 = new Scene(2, "Test", "N/A", 0, "N/A", 2, "N/A", 3, 3);
+  note1 = new Note(300, 35, 350, 100, "Test test test test test test test test test test test", 100, 20);
+  scenes = new ArrayList();
+  notes = new ArrayList();
+  scenes.add(scene1);
+
+  for (int i = 1; i < thingies.length; i ++) { //Initialize objects.
     thingies[i] = new Asteroid();
   }
   for (int i = 0; i < starLength; i ++) {
@@ -30,13 +42,19 @@ public void setup()
   for (int i = 0; i < 10; i ++) {
     blinkers[i] = new Blinker();
   }
-  
+  startButton = new Button(500, 400, 400, 100, "Start");
+  //400, 525, 600
+  buttonOne = new ClearButton(75, 335, 850, 100);
+  buttonTwo = new ClearButton(75, 460, 850, 100);
+  buttonThree = new ClearButton(75, 580, 850, 100);
+
 }
+
 public void draw() 
 {
   //your code here
-  if (game) {
-    background(0);
+  if (game) { // GAME CODE
+    background(0); // Showing game elements
     controlAccel();
     for (int i = 0; i < starLength; i ++) {
       nebula[i].show();
@@ -49,7 +67,20 @@ public void draw()
       blinkers[i].move();
       blinkers[i].show();
     }
-  } else if (menu) {
+    sceneCounter ++; //Advances a counter each turn. 
+    if (sceneCounter > 400) {
+      note1.show();
+    }
+    for (int i = 1; i < thingies.length; i ++) { //Checks for collision and resets the game if they happen.
+      float checkCollision = dist( ((SpaceShip)thingies[0]).getX(), ((SpaceShip)thingies[0]).getY(), ((Asteroid)thingies[i]).getX(), ((Asteroid)thingies[i]).getY());
+      if ( checkCollision < 25 && sceneCounter > 10) {
+        game = false;
+        dialouge = true;
+        scenes.add(0, scene2);
+        resetGame();
+      }
+    }
+  } else if (menu) { //Draws the start menu if "menu" is true.
     background(0);
     textSize(150);
     stroke(0, 0, 255);
@@ -59,6 +90,19 @@ public void draw()
     text("Thomas White", 100, 500);
     textSize(30);
     text("Click to 'play' - (even though it's not really a game yet)", 100, 600);
+    startButton.show();
+  } else if (dialouge) {
+    ((Scene)(scenes.get(0))).show();
+    if ( ((Scene)(scenes.get(0))).getAnswerNum() == 1 ) {
+      ((ClearButton)(buttonOne)).show();
+    } else if ( ((Scene)(scenes.get(0))).getAnswerNum() == 2  ) {
+      ((ClearButton)(buttonOne)).show();
+      ((ClearButton)(buttonTwo)).show();
+    } else if ( ((Scene)(scenes.get(0))).getAnswerNum() == 3 ) {
+      ((ClearButton)(buttonOne)).show();
+      ((ClearButton)(buttonTwo)).show();
+      ((ClearButton)(buttonThree)).show();
+    }
   }
 }
   
@@ -98,12 +142,7 @@ class SpaceShip extends Floater implements Floatable
     }
 
     public void accelerate(float accelMod) {
-      //double checkOnSpeed = Math.sqrt( ( ((float)myDirectionX) * ((float)myDirectionX) ) + ( ((float)myDirectionY) * ((float)myDirectionY) ) );
-      //Math.sin(myDirectionY) < 1 || Math.sin(myDirectionY) > -1 
-      //(myDirectionX < 2 && myDirectionX > -2) && (myDirectionY > -2 && myDirectionY < 2)
-      /* PROBELM: If pass limit, can't go down b/c accel; disabled. SOLUTION: if pass limit, then set *something* lower. */
       int limit = 6;
-
       if ( (myDirectionX < limit && myDirectionX > -limit) && (myDirectionY > -limit && myDirectionY < limit) ) {
         super.accelerate(accelMod);
       } else {
@@ -363,20 +402,28 @@ boolean dIsPressed = false;
 boolean wIsPressed = false;
 boolean spaceIsPressed = false;
 
-public class Button
+abstract class TextBoundary
 {
   protected int myX, myY, myWidth, myHeight, myRightBound, myBottomBound;
   protected String myText;
-  public Button() {
+  public TextBoundary() {
     myX = 0; myY = 0; myWidth = 0; myHeight = 0; myText = "test";
   }
-  public Button(int x, int y, int wid, int hgt, String txt) {
+  public TextBoundary(int x, int y, int wid, int hgt) {
+    myX = x;
+    myY = y;
+    myWidth = wid;
+    myHeight = hgt;
+    myText = "Delete";
+  }
+  public TextBoundary(int x, int y, int wid, int hgt, String txt) {
     myX = x;
     myY = y;
     myWidth = wid;
     myHeight = hgt;
     myText = txt;
   }
+ 
   public void setX(int x) {myX = x;}
   public int getX() {return myX;}
   public void setY(int y) {myY = y;}
@@ -387,15 +434,139 @@ public class Button
   public int getHeight() {return myHeight;}
   public void setText(String txt) {myText = txt;}
   public String getText() {return myText;}
+}
+
+public class Button extends TextBoundary
+{
+  
+  public Button() {}
+  public Button(int x, int y, int wid, int hgt, String txt) {
+    myX = x;
+    myY = y;
+    myWidth = wid;
+    myHeight = hgt;
+    myText = txt;
+  }
 
   public void show() {
     fill(0, 0, 255);
+    noStroke();
     rect(myX, myY, myWidth, myHeight);
     textSize(myHeight/2);
-    fill(0);
-    text(myText, myX + width/5, myY + width/5);
+    if (!(myText == "Delete")) {
+      fill(0);
+      stroke(0);
+      text(myText, myX + 140, myY + 70);
+    }
   }
+}
 
+class ClearButton extends Button{
+  public ClearButton(int x, int y, int wid, int hgt) {
+    myX = x;
+    myY = y;
+    myWidth = wid;
+    myHeight = hgt;
+    myText = "Delete";
+  }
+  public void show(){
+    if (mouseX > myX && mouseX < (myX + myWidth) && mouseY > myY && mouseY < (myY + myHeight)) {
+      fill(0, 0, 255, 100);
+      noStroke();
+      rect(myX, myY, myWidth, myHeight);
+      textSize(myHeight/2);
+      if (!(myText == "Delete")) {
+        fill(0);
+        stroke(0);
+        text(myText, myX + 140, myY + 70);
+      }
+    }
+  }
+}
+
+public class Note extends TextBoundary
+{
+  int textColor, triggerPoint; 
+  public Note() {}
+  public Note (int x, int y, int wid, int hgt, String txt, int colr, int trig) {
+    myX = x;
+    myY = y;
+    myWidth = wid;
+    myHeight = hgt;
+    myText = txt;
+    textColor = colr;
+    triggerPoint = trig;
+  }
+  public void show() {
+    if (sceneCounter > triggerPoint) {
+      fill(0, 0, 255, 100);
+      noStroke();
+      rect(myX, myY, myWidth, myHeight);
+      fill(0);
+      stroke(textColor);
+      textSize(20);
+      text(myText, myX + 10, myY + 10, myWidth - 10, myHeight - 10);
+      
+    }
+  }
+}
+
+public class Scene
+{
+  protected int myIndex, choiceOne, choiceTwo, choiceThree, answerNum;
+  protected String myText, choiceOneText, choiceTwoText, choiceThreeText;
+  public Scene() {
+    myIndex = 0; choiceOne = 0; choiceTwo = 0; choiceThree = 0; myText = "Test"; choiceOneText = "Test"; choiceTwoText = "Test"; choiceThreeText = "Test"; answerNum = 3;
+  }
+  public Scene(int index, String txt, String chcOneTxt, int chcOne, String chcTwoTxt, int chcTwo, String chcThreeTxt, int chcThree, int aNum)  {
+    myIndex = index;
+    myText = txt;
+    choiceOne = chcOne;
+    choiceTwo = chcTwo;
+    choiceThree = chcThree;
+    choiceOneText = chcOneTxt;
+    choiceTwoText = chcTwoTxt;
+    choiceThreeText = chcThreeTxt;
+    answerNum = aNum;
+  }
+  public void setIndex(int index) {myIndex = index;}
+  public int getIndex() {return myIndex;}
+  public void setChoiceOne(int chcOne) {choiceOne = chcOne;}
+  public int getChoiceOne() {return choiceOne;}
+  public void setChoiceTwo(int chcTwo) {choiceTwo = chcTwo;}
+  public int getChoiceTwo() {return choiceTwo;}
+  public void setChoiceThree(int chcThree) {choiceThree = chcThree;}
+  public int getChoiceThree() {return choiceThree;}
+  public void setChoiceOneText(String chcOneTxt) {choiceOneText = chcOneTxt;}
+  public String getChoiceOneText() {return choiceOneText;}
+  public void setChoiceTwoText(String chcTwoTxt) {choiceTwoText = chcTwoTxt;}
+  public String getChoiceTwoText() {return choiceTwoText;}
+  public void setChoiceThreeText(String chcThreeTxt) {choiceThreeText = chcThreeTxt;}
+  public String getChoiceThreeText() {return choiceThreeText;}
+  public void setAnswerNum(int aNum) {answerNum = aNum;}
+  public int getAnswerNum() {return answerNum;}
+
+  public void show() {
+    background(0);
+    textSize(40);
+    fill(0, 0, 255);
+    stroke(0, 0, 255);
+    text(myText, 100, 100);
+
+    if (answerNum == 0) {
+      textSize(10);
+      text( "(Click to continue)", width/2 - 40, 600);
+    } else if (answerNum == 1) {
+      text(choiceOneText, 100, 400);
+    } else if (answerNum == 2) {
+      text(choiceOneText, 100, 400);
+      text(choiceTwoText, 100, 525);
+    } else if (answerNum == 3) {
+      text(choiceOneText, 100, 400);
+      text(choiceTwoText, 100, 525);
+      text(choiceThreeText, 100, 650);
+    }
+  }
 }
 
 
@@ -408,9 +579,7 @@ public void keyPressed() {
     wIsPressed = true;
   } else if (key == 's' || key == 'S') {
     sIsPressed = true;
-  } /*else if (keyCode == 32) {
-    spaceIsPressed = true;
-  }*/else if (key == 32) {
+  } else if (key == 32) {
     ((SpaceShip)thingies[0]).setX((int)(Math.random()*width));
     ((SpaceShip)thingies[0]).setY((int)(Math.random()*height));
     ((SpaceShip)thingies[0]).setPointDirection((int)(Math.random()*360));
@@ -464,12 +633,44 @@ public void controlAccel() {
 }
 
 public void mousePressed() {
-  if (menu) {
+  if (menu && checkIfInside(startButton) ) {
     menu = false;
-    game = true;
+    dialouge = true;
+  } else if (dialouge) {
+      if (checkIfInside(buttonOne)) {
+        if ( ((Scene)(scenes.get(0))).getChoiceOne() == 0) {
+            game = true;
+            dialouge = false;
+        } else {
+          for (int i = 0; i < scenes.size(); i ++) {
+            if ( ((Scene)(scenes.get(i))).getIndex() == ((Scene)(scenes.get(0))).getChoiceOne()) {
+              scenes.add( ((Scene)(scenes.get(i))) );
+            }
+          }
+        }
+      }
   }
 }
 
+public boolean checkIfInside(Button b) {
+  if (mouseX > b.getX() && mouseX < ( b.getX() + b.getWidth() ) && mouseY > b.getY() && mouseY < (b.getY() + b.getHeight() ) ) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+public void resetGame() {
+  ((SpaceShip)thingies[0]).setX( (int)(Math.random()*width) );
+  ((SpaceShip)thingies[0]).setY( (int)(Math.random()*height) );
+  ((SpaceShip)thingies[0]).setDirectionX(0);
+  ((SpaceShip)thingies[0]).setDirectionY(0);
+  ((SpaceShip)thingies[0]).setPointDirection(0);
+}
+
+public void triggerNextScene() {
+
+}
 //TO Do
 /*
 Change the shape of the spaceship. Diamond with two wings. YAY!
@@ -477,4 +678,12 @@ Make the spaceship have a drive. Ambitious particle drive v.s. color change? YAY
 Make sure the simultanious keyu presses are dealt with. 
 Shape of Asteroids.
 Make hyperspace a limited resource later on, a way to escape a crisis. Powerups?
+STORY
+Make a scene class which displays text in three places as well as text along the top. Each scene has an index. 
+The scenes will get an arraylist. 
+Three buttons are made, in positions One, Two and Three. 
+If scene mode is active, the MousePressed function checks to see which scene is active, then which button is pressed, and pushes that scenes's choiceOne to position 0 of the Array. 
+
+ASK MR. SIMON: do subclasses need a constructor if they change no variables?
+
 */
