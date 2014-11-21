@@ -1,4 +1,5 @@
-Floatable[] thingies;
+ArrayList <Asteroid> asteroids;
+SpaceShip normandy;
 Star[] nebula;
 int thingiesLength;
 int starLength;
@@ -6,35 +7,39 @@ boolean blink, doneBlinking;
 Blinker[] blinkers;
 boolean menu, game, dialouge;
 Button startButton, buttonOne, buttonTwo, buttonThree;
-ArrayList scenes, notes;
-Scene scene1, scene2;
+ArrayList <Scene> scenes, pastScenes;
+ArrayList <Note> notes;
+Scene scene1, scene2, scene3;
 Note note1;
-int sceneCounter;
+int gameCounter;
 
 
 public void setup() 
 {
   
   menu = true;
-  sceneCounter = 0;
+  gameCounter = 0;
   //GAME SETUP
   size(1000, 700);
-  thingiesLength = 12; //Declare Arrays
+  //thingiesLength = 12; //Declare Arrays
   starLength = 100;
 
   blinkers = new Blinker[10];
-  thingies = new Floatable[thingiesLength];
+  asteroids = new ArrayList <Asteroid>();
   nebula = new Star[starLength];
-  thingies[0] = new SpaceShip();
-  scene1 = new Scene(1, "Wake up, Eva.", "What's going on?", 0, "Who are you?", 2, "Where am I?", 3, 3);
-  scene2 = new Scene(2, "Don't worry, let's just try that again. We have plenty of time.", "N/A", 0, "N/A", 2, "N/A", 3, 0);
+  normandy = new SpaceShip();
+  scene1 = new Scene(1, "Wake up, Eva.", "What's going on?", 0, "Who are you?", 2, "Where am I?", 3);
+  scene2 = new Scene(2, 0, "Don't worry, let's just try that again. We have plenty of time.");
+  scene3 = new Scene(3, 0, "Test1", "Test2");
   note1 = new Note(300, 35, 350, 100, "Test test test test test test test test test test test", 100, 20);
-  scenes = new ArrayList();
-  notes = new ArrayList();
+  scenes = new ArrayList <Scene>();
+  notes = new ArrayList<Note>();
   scenes.add(scene1);
+  scenes.add(scene2);
+  scenes.add(scene3);
 
-  for (int i = 1; i < thingies.length; i ++) { //Initialize objects.
-    thingies[i] = new Asteroid();
+  for (int i = 1; i < 12; i ++) { //Initialize objects.
+     asteroids.add( new Asteroid() );
   }
   for (int i = 0; i < starLength; i ++) {
     nebula[i] = new Star();
@@ -59,27 +64,34 @@ public void draw()
     for (int i = 0; i < starLength; i ++) {
       nebula[i].show();
     }
-    for (int i = 0; i < thingies.length; i ++) {
-      thingies[i].move();
-      thingies[i].show();
+    normandy.move();
+    normandy.show();
+    for (int i = 0; i < asteroids.size(); i ++) {
+      float checkCollision = dist( normandy.getX(), normandy.getY(), asteroids.get(i).getX(), asteroids.get(i).getY());
+      if (checkCollision < 25 && gameCounter > 10) {
+        asteroids.remove(asteroids.get(i));
+      } else {
+        asteroids.get(i).move();
+        asteroids.get(i).show();
+      }
     }
     for (int i = 0; i < blinkers.length; i ++) {
       blinkers[i].move();
       blinkers[i].show();
     }
-    sceneCounter ++; //Advances a counter each turn. 
-    if (sceneCounter > 400) {
+    gameCounter ++; //Advances a counter each turn. 
+    if (gameCounter > 400) {
       note1.show();
     }
-    for (int i = 1; i < thingies.length; i ++) { //Checks for collision and resets the game if they happen.
-      float checkCollision = dist( ((SpaceShip)thingies[0]).getX(), ((SpaceShip)thingies[0]).getY(), ((Asteroid)thingies[i]).getX(), ((Asteroid)thingies[i]).getY());
-      if ( checkCollision < 25 && sceneCounter > 10) {
+    /*for (int i = 1; i < asteroids.size(); i ++) { //Checks for collision and resets the game if they happen.
+      float checkCollision = dist( normandy.getX(), normandy.getY(), asteroids.get(i).getX(), asteroids.get(i).getY());
+      if ( checkCollision < 25 && gameCounter > 10) {
         game = false;
         dialouge = true;
-        scenes.add(0, scene2);
+        scenes.add(0, scenes.remove(2));
         resetGame();
       }
-    }
+    }*/
   } else if (menu) { //Draws the start menu if "menu" is true.
     background(0);
     textSize(150);
@@ -91,14 +103,14 @@ public void draw()
     textSize(30);
     text("Click to 'play' - (even though it's not really a game yet)", 100, 600);
     startButton.show();
-  } else if (dialouge) {
-    ((Scene)(scenes.get(0))).show();
-    if ( ((Scene)(scenes.get(0))).getAnswerNum() == 1 ) {
+  } else if (dialouge) { //Shows scenes if scene is true
+    scenes.get(0).show();
+    if (scenes.get(0).getAnswerNum() == 1 ) {
       ((ClearButton)(buttonOne)).show();
-    } else if ( ((Scene)(scenes.get(0))).getAnswerNum() == 2  ) {
+    } else if ( scenes.get(0).getAnswerNum() == 2  ) {
       ((ClearButton)(buttonOne)).show();
       ((ClearButton)(buttonTwo)).show();
-    } else if ( ((Scene)(scenes.get(0))).getAnswerNum() == 3 ) {
+    } else if ( scenes.get(0).getAnswerNum() == 3 ) {
       ((ClearButton)(buttonOne)).show();
       ((ClearButton)(buttonTwo)).show();
       ((ClearButton)(buttonThree)).show();
@@ -219,11 +231,11 @@ class Blinker extends Floater implements Floatable
 
   public void move() {
     if (blink && (Math.random() > .9)   ) {
-      myCenterX = ((SpaceShip)thingies[0]).myCenterX;
-      myCenterY = ((SpaceShip)thingies[0]).myCenterY;
-      myPointDirection = ((SpaceShip)thingies[0]).myPointDirection - 180;
-      myDirectionX = - ((SpaceShip)thingies[0]).myDirectionX;
-      myDirectionY = - ((SpaceShip)thingies[0]).myDirectionY;
+      myCenterX = normandy.myCenterX;
+      myCenterY = normandy.myCenterY;
+      myPointDirection = normandy.myPointDirection - 180;
+      myDirectionX = - normandy.myDirectionX;
+      myDirectionY = - normandy.myDirectionY;
       timeCounter = 0;
       blink = false;
     } else {
@@ -249,7 +261,7 @@ class Blinker extends Floater implements Floatable
     timeCounter ++;
   }
   public void show() {
-    double plumeLength = sqrt( (float)( ((SpaceShip)thingies[0]).myDirectionY*((SpaceShip)thingies[0]).myDirectionY ) + (float)( ((SpaceShip)thingies[0]).myDirectionX * ((SpaceShip)thingies[0]).myDirectionX ) );
+    double plumeLength = sqrt( (float)( normandy.myDirectionY*normandy.myDirectionY ) + (float)( normandy.myDirectionX * normandy.myDirectionX ) );
 
     if (timeCounter < (int)plumeLength*4) {
       super.show();
@@ -498,7 +510,7 @@ public class Note extends TextBoundary
     triggerPoint = trig;
   }
   public void show() {
-    if (sceneCounter > triggerPoint) {
+    if (gameCounter > triggerPoint) {
       fill(0, 0, 255, 100);
       noStroke();
       rect(myX, myY, myWidth, myHeight);
@@ -513,24 +525,54 @@ public class Note extends TextBoundary
 
 public class Scene
 {
-  protected int myIndex, choiceOne, choiceTwo, choiceThree, answerNum;
-  protected String myText, choiceOneText, choiceTwoText, choiceThreeText;
+  protected int myIndex, choiceOne, choiceTwo, choiceThree, answerNum, textBoxNum;
+  protected String myTextOne, myTextTwo, myTextThree, choiceOneText, choiceTwoText, choiceThreeText;
   public Scene() {
-    myIndex = 0; choiceOne = 0; choiceTwo = 0; choiceThree = 0; myText = "Test"; choiceOneText = "Test"; choiceTwoText = "Test"; choiceThreeText = "Test"; answerNum = 3;
+    myIndex = 0; choiceOne = 0; choiceTwo = 0; choiceThree = 0; myTextOne = "Test"; myTextTwo = "Test"; myTextThree = "Test"; choiceOneText = "Test"; choiceTwoText = "Test"; choiceThreeText = "Test"; answerNum = 3; textBoxNum = 1;
   }
-  public Scene(int index, String txt, String chcOneTxt, int chcOne, String chcTwoTxt, int chcTwo, String chcThreeTxt, int chcThree, int aNum)  {
-    myIndex = index;
-    myText = txt;
-    choiceOne = chcOne;
-    choiceTwo = chcTwo;
-    choiceThree = chcThree;
-    choiceOneText = chcOneTxt;
-    choiceTwoText = chcTwoTxt;
-    choiceThreeText = chcThreeTxt;
-    answerNum = aNum;
+  public Scene(int index, String txt1, String txt2, String txt3, String chcOneTxt, int chcOne, String chcTwoTxt, int chcTwo, String chcThreeTxt, int chcThree, int aNum, int txtbx)  {
+    myIndex = index;  myTextOne = txt1; myTextTwo = txt2; myTextThree = txt3;
+    choiceOne = chcOne; choiceTwo = chcTwo; choiceThree = chcThree; choiceOneText = chcOneTxt; choiceTwoText = chcTwoTxt; choiceThreeText = chcThreeTxt;
+    answerNum = aNum; textBoxNum = txtbx;
+  }
+  public Scene(int index, int chc1, String txt1, String txt2, String txt3 ) {
+    myIndex = index; myTextOne = txt1; myTextTwo = txt2; myTextThree = txt3; 
+    choiceOne = chc1; choiceTwo = -1; choiceThree = -1; choiceOneText = "na"; choiceTwoText = "na"; choiceThreeText = "na"; 
+    answerNum = 0; textBoxNum = 3;
+  }
+  public Scene(int index, int chc1, String txt1, String txt2) {
+    myIndex = index; myTextOne = txt1; myTextTwo = txt2; myTextThree = "na"; 
+    choiceOne = chc1; choiceTwo = -1; choiceThree = -1; choiceOneText = "na"; choiceTwoText = "na"; choiceThreeText = "na"; 
+    answerNum = 0; textBoxNum = 2;
+  }
+  public Scene(int index, int chc1, String txt1) {
+    myIndex = index; myTextOne = txt1; myTextTwo = "na"; myTextThree = "na"; 
+    choiceOne = chc1; choiceTwo = -1; choiceThree = -1; choiceOneText = "na"; choiceTwoText = "na"; choiceThreeText = "na"; 
+    answerNum = 0; textBoxNum = 1;
+  }
+  public Scene(int index, String txt1, String chc1txt, int chc1) {
+    myIndex = index; myTextOne = txt1; myTextTwo = "na"; myTextThree = "na"; 
+    choiceOne = chc1; choiceTwo = -1; choiceThree = -1; choiceOneText = chc1txt; choiceTwoText = "na"; choiceThreeText = "na"; 
+    answerNum = 1; textBoxNum = 1;
+  }
+  public Scene(int index, String txt1, String chc1txt, int chc1, String chc2txt, int chc2) {
+    myIndex = index; myTextOne = txt1; myTextTwo = "na"; myTextThree = "na"; 
+    choiceOne = chc1; choiceTwo = chc2; choiceThree = -1; choiceOneText = chc1txt; choiceTwoText = chc2txt; choiceThreeText = "na"; 
+    answerNum = 2; textBoxNum = 1;
+  }
+  public Scene(int index, String txt1, String chc1txt, int chc1, String chc2txt, int chc2, String chc3txt, int chc3) {
+    myIndex = index; myTextOne = txt1; myTextTwo = "na"; myTextThree = "na"; 
+    choiceOne = chc1; choiceTwo = chc2; choiceThree = chc3; choiceOneText = chc1txt; choiceTwoText = chc2txt; choiceThreeText = chc3txt; 
+    answerNum = 3; textBoxNum = 1;
   }
   public void setIndex(int index) {myIndex = index;}
   public int getIndex() {return myIndex;}
+  public void setTextOne(String txt) {myTextOne = txt;}
+  public String getTextOne() {return myTextOne;}
+  public void setTextTwo(String txt) {myTextTwo = txt;}
+  public String getTextTwo() {return myTextTwo;}
+  public void setTextThree(String txt) {myTextThree = txt;}
+  public String getTextThree() {return myTextThree;}
   public void setChoiceOne(int chcOne) {choiceOne = chcOne;}
   public int getChoiceOne() {return choiceOne;}
   public void setChoiceTwo(int chcTwo) {choiceTwo = chcTwo;}
@@ -549,10 +591,27 @@ public class Scene
   public void show() {
     background(0);
     textSize(40);
+    fill(0, 255, 0);
+    
+    if (textBoxNum == 1) {
+      text(myTextOne, 100, 100, 800, 400);
+    } else if (textBoxNum == 2) {
+      text(myTextOne, 100, 100, 800, 400);
+      fill(160, 50, 168);
+      
+      text(myTextTwo, 100, 300, 800, 400);
+    } else if (textBoxNum == 3) {
+      text(myTextOne, 100, 100, 800, 400);
+      fill(0, 0, 255);
+     
+      text(myTextTwo, 100, 300, 800, 400);
+      fill(0, 255, 0);
+      
+      text(myTextTwo, 100, 500, 800, 400);
+    }
+    
     fill(0, 0, 255);
-    stroke(0, 0, 255);
-    text(myText, 100, 100, 800, 400);
-
+    
     if (answerNum == 0) {
       textSize(10);
       text( "(Click to continue)", width/2 - 40, 600);
@@ -567,6 +626,26 @@ public class Scene
       text(choiceThreeText, 100, 650);
     }
   }
+
+  public void triggerNextScene(int chc) {
+
+    
+    int x = 0;
+    for (int i = 0; i < scenes.size(); i ++) {
+      if (scenes.get(i).getIndex() == chc) {
+        x = i;
+      }
+    }
+
+    if (chc == 1) {
+      if (choiceOne == 0) {dialouge = false; game = true; } else {scenes.add(0, scenes.remove(x));}   
+    } else if (chc == 2) {
+      if (choiceTwo == 0) { dialouge = false; game = true;} else {scenes.add(0, scenes.remove(x));}
+    } else if (chc == 3) {
+      if (choiceThree == 0) {dialouge = false; game = true;} else {scenes.add(0, scenes.remove(x));}
+    }
+  }
+
 }
 
 
@@ -580,11 +659,11 @@ public void keyPressed() {
   } else if (key == 's' || key == 'S') {
     sIsPressed = true;
   } else if (key == 32) {
-    ((SpaceShip)thingies[0]).setX((int)(Math.random()*width));
-    ((SpaceShip)thingies[0]).setY((int)(Math.random()*height));
-    ((SpaceShip)thingies[0]).setPointDirection((int)(Math.random()*360));
-    ((SpaceShip)thingies[0]).setDirectionX(0);
-    ((SpaceShip)thingies[0]).setDirectionY(0);
+    normandy.setX((int)(Math.random()*width));
+    normandy.setY((int)(Math.random()*height));
+    normandy.setPointDirection((int)(Math.random()*360));
+    normandy.setDirectionX(0);
+    normandy.setDirectionY(0);
   }
 }
 
@@ -604,31 +683,31 @@ public void keyReleased() {
 
 public void controlAccel() {
   if (wIsPressed) {
-    ((SpaceShip)thingies[0]).accelerate(0.3);
+    normandy.accelerate(0.3);
     blink = true;
   } else if (sIsPressed) {
-    ((SpaceShip)thingies[0]).accelerate(-0.3);
+    normandy.accelerate(-0.3);
     blink = true;
   } else if (aIsPressed) {
-    ((SpaceShip)thingies[0]).rotate(-8);
+    normandy.rotate(-8);
   } else if (dIsPressed) {
-    ((SpaceShip)thingies[0]).rotate(8);
+    normandy.rotate(8);
   } else if (wIsPressed && aIsPressed) {
-    ((SpaceShip)thingies[0]).accelerate(0.3);
+    normandy.accelerate(0.3);
     blink = true;
-    ((SpaceShip)thingies[0]).rotate(-8);
+    normandy.rotate(-8);
   } else if (wIsPressed && dIsPressed) {
-    ((SpaceShip)thingies[0]).accelerate(0.3);
+    normandy.accelerate(0.3);
     blink = true;
-    ((SpaceShip)thingies[0]).rotate(8);
+    normandy.rotate(8);
   } else if (sIsPressed && aIsPressed) {
-    ((SpaceShip)thingies[0]).accelerate(-0.3);
+    normandy.accelerate(-0.3);
     blink = true;
-    ((SpaceShip)thingies[0]).rotate(-8);
+    normandy.rotate(-8);
   } else if (sIsPressed && dIsPressed) {
-    ((SpaceShip)thingies[0]).accelerate(-0.3);
+    normandy.accelerate(-0.3);
     blink = true;
-    ((SpaceShip)thingies[0]).rotate(8);
+    normandy.rotate(8);
   }
 }
 
@@ -637,24 +716,31 @@ public void mousePressed() {
     menu = false;
     dialouge = true;
   } else if (dialouge) {
-      if ( ((Scene)(scenes.get(0))).getAnswerNum() == 0 ) {
+      /*if ( scenes.get(0).getAnswerNum() == 0 ) {
         game = true;
         dialouge = false;
-      } else if ( ((Scene)(scenes.get(0))).getAnswerNum() > 0 ) {
+      } else if ( scenes.get(0).getAnswerNum() > 0 ) {
 
         if (checkIfInside(buttonOne)) {
-          if ( ((Scene)(scenes.get(0))).getChoiceOne() == 0) {
+          if ( scenes.get(0).getChoiceOne() == 0) {
               game = true;
               dialouge = false;
           } else {
             for (int i = 0; i < scenes.size(); i ++) {
-              if ( ((Scene)(scenes.get(i))).getIndex() == ((Scene)(scenes.get(0))).getChoiceOne()) {
-                scenes.add( ((Scene)(scenes.get(i))) );
+              if ( scenes.get(i).getIndex() == scenes.get(0).getChoiceOne()) {
+                scenes.add( scenes.get(i) );
               }
             }
           }
         }
 
+      }*/
+      if (checkIfInside(buttonOne)) {
+        scenes.get(0).triggerNextScene(1);
+      } else if (checkIfInside(buttonTwo)) {
+        scenes.get(0).triggerNextScene(2);
+      } else if (checkIfInside(buttonThree)) {
+        scenes.get(0).triggerNextScene(3);
       }
   }
 }
@@ -668,16 +754,14 @@ public boolean checkIfInside(Button b) {
 }
 
 public void resetGame() {
-  ((SpaceShip)thingies[0]).setX( (int)(Math.random()*width) );
-  ((SpaceShip)thingies[0]).setY( (int)(Math.random()*height) );
-  ((SpaceShip)thingies[0]).setDirectionX(0);
-  ((SpaceShip)thingies[0]).setDirectionY(0);
-  ((SpaceShip)thingies[0]).setPointDirection(0);
+  normandy.setX( (int)(Math.random()*width) );
+  normandy.setY( (int)(Math.random()*height) );
+  normandy.setDirectionX(0);
+  normandy.setDirectionY(0);
+  normandy.setPointDirection(0);
 }
 
-public void triggerNextScene() {
 
-}
 //TO Do
 /*
 Change the shape of the spaceship. Diamond with two wings. YAY!
@@ -691,11 +775,14 @@ The scenes will get an arraylist.
 Three buttons are made, in positions One, Two and Three. 
 If scene mode is active, the MousePressed function checks to see which scene is active, then which button is pressed, and pushes that scenes's choiceOne to position 0 of the Array. 
 
-Fix and simplfy the arraylist.
-Get rid of the interface, it overcomplicates things. 
+Fix and simplfy the arraylist. YAY
+Get rid of the interface, it overcomplicates things. YAY
 Simplify everything into component functions. 
 Farther collision distance.
+Scene-to-scene transition
+Resetgame also resets asteroids
 
+Re-do constructors for scenes so that it can tell what I want just from the construction. 
 
 ASK MR. SIMON: do subclasses need a constructor if they change no variables?
 
