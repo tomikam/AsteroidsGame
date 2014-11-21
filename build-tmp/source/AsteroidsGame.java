@@ -25,9 +25,9 @@ boolean menu, game, dialouge;
 Button startButton, buttonOne, buttonTwo, buttonThree;
 ArrayList <Scene> scenes, pastScenes;
 ArrayList <Note> notes;
-Scene scene1, scene2, scene3;
+Scene scene1, scene2, scene3, scene4;
 Note note1;
-int gameCounter;
+int gameCounter, deathCounter;
 
 
 public void setup() 
@@ -44,15 +44,17 @@ public void setup()
   asteroids = new ArrayList <Asteroid>();
   nebula = new Star[starLength];
   normandy = new SpaceShip();
-  scene1 = new Scene(1, "Wake up, Eva.", "What's going on?", 0, "Who are you?", 2, "Where am I?", 3);
+  scene1 = new Scene(1, "Wake up, Eva.", "What's going on?", 0, "Who are you?", 2, "Where am I?", 4);
   scene2 = new Scene(2, 0, "Don't worry, let's just try that again. We have plenty of time.");
   scene3 = new Scene(3, 0, "Test1", "Test2");
+  scene4 = new Scene(4, " ", "You're not listening to me, are you?", 1);
   note1 = new Note(300, 35, 350, 100, "Test test test test test test test test test test test", 100, 20);
   scenes = new ArrayList <Scene>();
   notes = new ArrayList<Note>();
   scenes.add(scene1);
   scenes.add(scene2);
   scenes.add(scene3);
+  scenes.add(scene4);
 
   for (int i = 1; i < 12; i ++) { //Initialize objects.
      asteroids.add( new Asteroid() );
@@ -581,6 +583,7 @@ public class Scene
     choiceOne = chc1; choiceTwo = chc2; choiceThree = chc3; choiceOneText = chc1txt; choiceTwoText = chc2txt; choiceThreeText = chc3txt; 
     answerNum = 3; textBoxNum = 1;
   }
+  
   public void setIndex(int index) {myIndex = index;}
   public int getIndex() {return myIndex;}
   public void setTextOne(String txt) {myTextOne = txt;}
@@ -607,21 +610,22 @@ public class Scene
   public void show() {
     background(0);
     textSize(40);
-    fill(0, 255, 0);
-    
+    //fill(0, 255, 0);
+    fill(0, 0, 255);
+
     if (textBoxNum == 1) {
       text(myTextOne, 100, 100, 800, 400);
     } else if (textBoxNum == 2) {
       text(myTextOne, 100, 100, 800, 400);
-      fill(160, 50, 168);
+      //fill(160, 50, 168);
       
       text(myTextTwo, 100, 300, 800, 400);
     } else if (textBoxNum == 3) {
       text(myTextOne, 100, 100, 800, 400);
-      fill(0, 0, 255);
+      //fill(0, 0, 255);
      
       text(myTextTwo, 100, 300, 800, 400);
-      fill(0, 255, 0);
+      //fill(0, 255, 0);
       
       text(myTextTwo, 100, 500, 800, 400);
     }
@@ -654,11 +658,11 @@ public class Scene
     }
 
     if (chc == 1) {
-      if (choiceOne == 0) {dialouge = false; game = true; } else {scenes.add(0, scenes.remove(x));}   
+      if (choiceOne == 0) {dialouge = false; game = true; gameCounter = 0;} else {scenes.add(0, scenes.remove(x));}   
     } else if (chc == 2) {
-      if (choiceTwo == 0) { dialouge = false; game = true;} else {scenes.add(0, scenes.remove(x));}
+      if (choiceTwo == 0) { dialouge = false; game = true; gameCounter = 0;} else {scenes.add(0, scenes.remove(x));}
     } else if (chc == 3) {
-      if (choiceThree == 0) {dialouge = false; game = true;} else {scenes.add(0, scenes.remove(x));}
+      if (choiceThree == 0) {dialouge = false; game = true; gameCounter = 0;} else {scenes.add(0, scenes.remove(x));}
     }
   }
 
@@ -777,6 +781,18 @@ public void resetGame() {
   normandy.setPointDirection(0);
 }
 
+public void deathActions() {
+  resetGame();
+  if (deathCounter == 0) {
+    scenes.add(0, scenes.remove(2));
+  } // Add more based opn what scene you go to after each death.
+
+  deathCounter++;
+}
+
+public void returnToGame() {
+  //Find most recent scene, and from that scene extrapolate conditions on whcih level you're going into. 
+}
 
 //TO Do
 /*
@@ -786,10 +802,10 @@ Make sure the simultanious keyu presses are dealt with.
 Shape of Asteroids.
 Make hyperspace a limited resource later on, a way to escape a crisis. Powerups?
 STORY
-Make a scene class which displays text in three places as well as text along the top. Each scene has an index. 
-The scenes will get an arraylist. 
-Three buttons are made, in positions One, Two and Three. 
-If scene mode is active, the MousePressed function checks to see which scene is active, then which button is pressed, and pushes that scenes's choiceOne to position 0 of the Array. 
+Make a scene class which displays text in three places as well as text along the top. Each scene has an index. YAY
+The scenes will get an arraylist. YAY
+Three buttons are made, in positions One, Two and Three. YAY
+If scene mode is active, the MousePressed function checks to see which scene is active, then which button is pressed, and pushes that scenes's choiceOne to position 0 of the Array. YAY
 
 Fix and simplfy the arraylist. YAY
 Get rid of the interface, it overcomplicates things. YAY
@@ -798,9 +814,10 @@ Farther collision distance.
 Scene-to-scene transition
 Resetgame also resets asteroids
 
-Re-do constructors for scenes so that it can tell what I want just from the construction. 
+Re-do constructors for scenes so that it can tell what I want just from the construction. YAY
+Can't just re-set gameCounter when dead because might then spend time doing stuff. YAY
 
-ASK MR. SIMON: do subclasses need a constructor if they change no variables?
+Only allow scene change after a pause, to stop double clicks?
 
 */
   static public void main(String[] passedArgs) {
