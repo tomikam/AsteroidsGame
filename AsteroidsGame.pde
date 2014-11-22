@@ -9,7 +9,7 @@ boolean menu, game, dialouge;
 Button startButton, buttonOne, buttonTwo, buttonThree;
 ArrayList <Scene> scenes, pastScenes;
 ArrayList <Note> notes;
-Scene scene1, scene2, scene3, scene4;
+Scene scene1, scene2, scene3, scene4, scene5;
 Note note1;
 int gameCounter, deathCounter;
 
@@ -28,17 +28,15 @@ public void setup()
   asteroids = new ArrayList <Asteroid>();
   nebula = new Star[starLength];
   normandy = new SpaceShip();
-  scene1 = new Scene(1, "Wake up, Eva.", "What's going on?", 0, "Who are you?", 2, "Where am I?", 4);
+  scene1 = new Scene(1, "Wake up, Eva.", "What's going on?", 5, "Who are you?", 2, "Where am I?", 4);
   scene2 = new Scene(2, 0, "Don't worry, let's just try that again. We have plenty of time.");
-  scene3 = new Scene(3, 0, "Test1", "Test2");
-  scene4 = new Scene(4, " ", "You're not listening to me, are you?", 1);
+  scene3 = new Scene(3, 1, "Test1 - this is the drop scene for unwritten paths.", "Test2");
+  scene4 = new Scene(4, "... ", "You're not listening to me, are you?", 1);
+  scene5 = new Scene(5, "Okay, interesting. Do you think you're thinking clearly right now?", "What? Of course I am!", 3, "What do you mean, 'thinking clearly'?", 3, "I'm not going to answer you until you tell me what is going on.", 3);
   note1 = new Note(300, 35, 350, 100, "Test test test test test test test test test test test", 100, 20);
   scenes = new ArrayList <Scene>();
   notes = new ArrayList<Note>();
-  scenes.add(scene1);
-  scenes.add(scene2);
-  scenes.add(scene3);
-  scenes.add(scene4);
+  scenes.add(scene1); scenes.add(scene2); scenes.add(scene3); scenes.add(scene4); scenes.add(scene5);
 
   for (int i = 1; i < 12; i ++) { //Initialize objects.
      asteroids.add( new Asteroid() );
@@ -631,23 +629,49 @@ public class Scene
     }
   }
 
-  public void triggerNextScene(int chc) {
+  public void triggerNextScene() {
 
+      /*if (checkIfInside(buttonOne)) {
+        scenes.get(0).triggerNextScene(1);
+      } else if (checkIfInside(buttonTwo)) {
+        scenes.get(0).triggerNextScene(2);
+      } else if (checkIfInside(buttonThree)) {
+        scenes.get(0).triggerNextScene(3);
+      }*/
+      int chc = 9;
+
+      if (answerNum == 0) {
+        chc = choiceOne;
+      } else if (checkIfInside(buttonOne)) {
+        chc = choiceOne;
+
+      } else if (checkIfInside(buttonTwo)) {
+        chc = choiceTwo;
+      } else if (checkIfInside(buttonThree)) {
+        chc = choiceThree;
+      }
+    if (chc == 0) {
+      game = true; dialouge = false; resetGame(); gameSetup();
+    }
     
-    int x = 0;
+    //int x = 0;
     for (int i = 0; i < scenes.size(); i ++) {
       if (scenes.get(i).getIndex() == chc) {
-        x = i;
+        //x = i;
+        scenes.add(0, scenes.remove(i));
+        System.out.println("t");
       }
     }
 
-    if (chc == 1) {
+    
+
+    /*if (chc == 1) {
       if (choiceOne == 0) {dialouge = false; game = true; gameCounter = 0;} else {scenes.add(0, scenes.remove(x));}   
     } else if (chc == 2) {
       if (choiceTwo == 0) { dialouge = false; game = true; gameCounter = 0;} else {scenes.add(0, scenes.remove(x));}
     } else if (chc == 3) {
       if (choiceThree == 0) {dialouge = false; game = true; gameCounter = 0;} else {scenes.add(0, scenes.remove(x));}
-    }
+    }*/
   }
 
 }
@@ -737,15 +761,16 @@ public void mousePressed() {
             }
           }
         }
-
       }*/
-      if (checkIfInside(buttonOne)) {
+      scenes.get(0).triggerNextScene();
+
+      /*if (checkIfInside(buttonOne)) {
         scenes.get(0).triggerNextScene(1);
       } else if (checkIfInside(buttonTwo)) {
         scenes.get(0).triggerNextScene(2);
       } else if (checkIfInside(buttonThree)) {
         scenes.get(0).triggerNextScene(3);
-      }
+      }*/
   }
 }
 
@@ -774,7 +799,7 @@ public void deathActions() {
   deathCounter++;
 }
 
-public void returnToGame() {
+public void gameSetup() {
   //Find most recent scene, and from that scene extrapolate conditions on whcih level you're going into. 
 }
 
