@@ -12,23 +12,27 @@ ArrayList <Note> notes;
 Scene scene1, scene2, scene3, scene4, scene5;
 Note note1;
 int gameCounter, deathCounter;
-
+//Bullet testB;
+ArrayList <Bullet> bullets;
 
 public void setup() 
 {
   
-  menu = true;
+  //menu = true;
+  game = true;
   gameCounter = 0;
   //GAME SETUP
   size(1000, 700);
   //thingiesLength = 12; //Declare Arrays
   starLength = 100;
-
+  
+  bullets = new ArrayList <Bullet>();
   blinkers = new Blinker[10];
   asteroids = new ArrayList <Asteroid>();
   nebula = new Star[starLength];
   normandy = new SpaceShip();
-  scene1 = new Scene(1, "Wake up, Eva.", "What's going on?", 5, "Who are you?", 2, "Where am I?", 4);
+  
+  scene1 = new Scene(1, "Wake up, Eva.", "What's going on?", 5, "Who are you?", 0, "Where am I?", 4);
   scene2 = new Scene(2, 0, "Don't worry, let's just try that again. We have plenty of time.");
   scene3 = new Scene(3, 1, "Test1 - this is the drop scene for unwritten paths.", "Test2");
   scene4 = new Scene(4, "... ", "You're not listening to me, are you?", 1);
@@ -37,6 +41,7 @@ public void setup()
   scenes = new ArrayList <Scene>();
   notes = new ArrayList<Note>();
   scenes.add(scene1); scenes.add(scene2); scenes.add(scene3); scenes.add(scene4); scenes.add(scene5);
+  
 
   for (int i = 1; i < 12; i ++) { //Initialize objects.
      asteroids.add( new Asteroid() );
@@ -58,40 +63,53 @@ public void setup()
 public void draw() 
 {
   //your code here
+  
   if (game) { // GAME CODE
     background(0); // Showing game elements
     controlAccel();
+    
     for (int i = 0; i < starLength; i ++) {
       nebula[i].show();
     }
     normandy.move();
     normandy.show();
+    for (int i = 0; i < bullets.size(); i ++) {
+      bullets.get(i).show();
+      bullets.get(i).move();
+    }
+     
+    /*for (int i = asteroids.size(); i > 0; i --) {
+      for (int j =  bullets.size(); j > 0; j --) {
+        float checkDestruction = dist( bullets.get(j).getX(), bullets.get(j).getY(), asteroids.get(i).getX(), asteroids.get(i).getY());
+        if (checkDestruction < 25) {
+          asteroids.remove(asteroids.get(i));
+          bullets.remove(bullets.get(j));
+          if (asteroids.size() > 0) {
+            i --;
+          }
+        }
+      }
+    }*/
+      
     for (int i = 0; i < asteroids.size(); i ++) {
       float checkCollision = dist( normandy.getX(), normandy.getY(), asteroids.get(i).getX(), asteroids.get(i).getY());
       if (checkCollision < 25 && gameCounter > 10) {
-        asteroids.remove(asteroids.get(i));
-      } else {
+        game = false; dialouge = true; 
+        deathActions();
+      } 
+      
         asteroids.get(i).move();
         asteroids.get(i).show();
-      }
     }
     for (int i = 0; i < blinkers.length; i ++) {
       blinkers[i].move();
       blinkers[i].show();
     }
     gameCounter ++; //Advances a counter each turn. 
-    if (gameCounter > 400) {
+    /*if (gameCounter > 400) {
       note1.show();
-    }
-    /*for (int i = 1; i < asteroids.size(); i ++) { //Checks for collision and resets the game if they happen.
-      float checkCollision = dist( normandy.getX(), normandy.getY(), asteroids.get(i).getX(), asteroids.get(i).getY());
-      if ( checkCollision < 25 && gameCounter > 10) {
-        game = false;
-        dialouge = true;
-        scenes.add(0, scenes.remove(2));
-        resetGame();
-      }
     }*/
+    
   } else if (menu) { //Draws the start menu if "menu" is true.
     background(0);
     textSize(150);
@@ -321,7 +339,45 @@ class Asteroid extends Floater implements Floatable
 
 }
 
+public class Bullet extends Floater {
+  public Bullet(SpaceShip n) {
+    myCenterX = n.getX();
+    myCenterY = n.getY();
+    myPointDirection = n.getPointDirection();
+    double dRadians = myPointDirection*(Math.PI/180);
+    myDirectionX = (5*(Math.cos(dRadians))) + n.getDirectionX();
+    myDirectionY = (5*(Math.sin(dRadians))) + n.getDirectionY();
+    corners = 4;
 
+    //int[] setXArray = {0, 4, 4, -4, -4};
+    //int[] setYArray = {8, 4, -4, -4, 4};    
+    int[] setXArray = {4, -4, -4, 4};
+    int[] setYArray = {-2, -2, 2, 2};
+
+    xCorners = setXArray;
+    yCorners = setYArray;
+    myColor = color(0, 0, 255);
+  }
+  public void setX(int x) {myCenterX = x;}
+  public int getX() {return (int)myCenterX;}
+  public void setY(int y) {myCenterY = y;}
+  public int getY() {return (int)myCenterY;}
+  public void setDirectionX(double x) {myDirectionX = x;}
+  public double getDirectionX() {return myDirectionX;}
+  public void setDirectionY(double y) {myDirectionY = y;}
+  public double getDirectionY() {return myDirectionY;}
+  public void setPointDirection(int degrees) {myPointDirection = degrees;}
+  public double getPointDirection() {return myPointDirection;}
+
+  public void move() {
+    myCenterX += myDirectionX;    
+    myCenterY += myDirectionY;   
+
+    if (myCenterX >width || myCenterX<0 || myCenterY >height || myCenterY < 0) {     
+      bullets.remove(this);
+    }
+  }
+}
 
 
 
@@ -631,13 +687,6 @@ public class Scene
 
   public void triggerNextScene() {
 
-      /*if (checkIfInside(buttonOne)) {
-        scenes.get(0).triggerNextScene(1);
-      } else if (checkIfInside(buttonTwo)) {
-        scenes.get(0).triggerNextScene(2);
-      } else if (checkIfInside(buttonThree)) {
-        scenes.get(0).triggerNextScene(3);
-      }*/
       int chc = 9;
 
       if (answerNum == 0) {
@@ -654,26 +703,14 @@ public class Scene
       game = true; dialouge = false; resetGame(); gameSetup();
     }
     
-    //int x = 0;
+    
     for (int i = 0; i < scenes.size(); i ++) {
       if (scenes.get(i).getIndex() == chc) {
-        //x = i;
         scenes.add(0, scenes.remove(i));
         System.out.println("t");
       }
     }
-
-    
-
-    /*if (chc == 1) {
-      if (choiceOne == 0) {dialouge = false; game = true; gameCounter = 0;} else {scenes.add(0, scenes.remove(x));}   
-    } else if (chc == 2) {
-      if (choiceTwo == 0) { dialouge = false; game = true; gameCounter = 0;} else {scenes.add(0, scenes.remove(x));}
-    } else if (chc == 3) {
-      if (choiceThree == 0) {dialouge = false; game = true; gameCounter = 0;} else {scenes.add(0, scenes.remove(x));}
-    }*/
   }
-
 }
 
 
@@ -686,12 +723,14 @@ public void keyPressed() {
     wIsPressed = true;
   } else if (key == 's' || key == 'S') {
     sIsPressed = true;
-  } else if (key == 32) {
+  } else if (key == 'q' || key == 'Q') {
     normandy.setX((int)(Math.random()*width));
     normandy.setY((int)(Math.random()*height));
     normandy.setPointDirection((int)(Math.random()*360));
     normandy.setDirectionX(0);
     normandy.setDirectionY(0);
+  } else if (key == 32) {
+    bullets.add(new Bullet(normandy));
   }
 }
 
@@ -709,12 +748,12 @@ public void keyReleased() {
   }
 }
 
-public void controlAccel() {
+public void controlAccel() {  // S is also set to do forwards. 
   if (wIsPressed) {
     normandy.accelerate(0.3);
     blink = true;
   } else if (sIsPressed) {
-    normandy.accelerate(-0.3);
+    normandy.accelerate(0.3);
     blink = true;
   } else if (aIsPressed) {
     normandy.rotate(-8);
@@ -729,11 +768,11 @@ public void controlAccel() {
     blink = true;
     normandy.rotate(8);
   } else if (sIsPressed && aIsPressed) {
-    normandy.accelerate(-0.3);
+    normandy.accelerate(0.3);
     blink = true;
     normandy.rotate(-8);
   } else if (sIsPressed && dIsPressed) {
-    normandy.accelerate(-0.3);
+    normandy.accelerate(0.3);
     blink = true;
     normandy.rotate(8);
   }
@@ -743,34 +782,8 @@ public void mousePressed() {
   if (menu && checkIfInside(startButton) ) {
     menu = false;
     dialouge = true;
-  } else if (dialouge) {
-      /*if ( scenes.get(0).getAnswerNum() == 0 ) {
-        game = true;
-        dialouge = false;
-      } else if ( scenes.get(0).getAnswerNum() > 0 ) {
-
-        if (checkIfInside(buttonOne)) {
-          if ( scenes.get(0).getChoiceOne() == 0) {
-              game = true;
-              dialouge = false;
-          } else {
-            for (int i = 0; i < scenes.size(); i ++) {
-              if ( scenes.get(i).getIndex() == scenes.get(0).getChoiceOne()) {
-                scenes.add( scenes.get(i) );
-              }
-            }
-          }
-        }
-      }*/
+  } else if (dialouge) {  
       scenes.get(0).triggerNextScene();
-
-      /*if (checkIfInside(buttonOne)) {
-        scenes.get(0).triggerNextScene(1);
-      } else if (checkIfInside(buttonTwo)) {
-        scenes.get(0).triggerNextScene(2);
-      } else if (checkIfInside(buttonThree)) {
-        scenes.get(0).triggerNextScene(3);
-      }*/
   }
 }
 
@@ -788,12 +801,19 @@ public void resetGame() {
   normandy.setDirectionX(0);
   normandy.setDirectionY(0);
   normandy.setPointDirection(0);
+  gameCounter = 0;
+  System.out.println("Test");
 }
 
 public void deathActions() {
   resetGame();
   if (deathCounter == 0) {
-    scenes.add(0, scenes.remove(2));
+    for (int i = 0; i < scenes.size(); i ++) {
+      if (scenes.get(i).getIndex() == 2) {
+        scenes.add(0, scenes.remove(i));
+      }
+    }
+    
   } // Add more based opn what scene you go to after each death.
 
   deathCounter++;
@@ -827,6 +847,8 @@ Re-do constructors for scenes so that it can tell what I want just from the cons
 Can't just re-set gameCounter when dead because might then spend time doing stuff. YAY
 
 Only allow scene change after a pause, to stop double clicks?
-Akward probelm with next scene - is it lookign at index or button #?
+Akward probelm with next scene - is it lookign at index or button #? YAY
+
+Special larger bukllets? Laser? Other firing methods?
 
 */
