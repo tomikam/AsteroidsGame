@@ -623,9 +623,9 @@ public class Scene
       text(choiceOneText, 100, 400);
       text(choiceTwoText, 100, 525);
     } else if (answerNum == 3) {
-      text(choiceOneText, 100, 400);
-      text(choiceTwoText, 100, 525);
-      text(choiceThreeText, 100, 650);
+      text(choiceOneText, 100, 400 /*600, 100*/);
+      text(choiceTwoText, 100, 525 /*600, 100*/);
+      text(choiceThreeText, 100, 650 /*600, 100*/);
     }
   }
 
