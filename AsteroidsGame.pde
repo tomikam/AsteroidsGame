@@ -252,8 +252,8 @@ class Blinker extends Floater implements Floatable
       myCenterX = normandy.getX();
       myCenterY = normandy.getY();
       myPointDirection = normandy.getPointDirection() - 180;
-      myDirectionX = - normandy.myDirectionX;//-5*(Math.cos(normandy.getPointDirection()));
-      myDirectionY = - normandy.myDirectionY;//-5*(Math.sin(normandy.getPointDirection()));
+      myDirectionX = -5*(Math.cos(normandy.getPointDirection()));//- normandy.myDirectionX;//-5*(Math.cos(normandy.getPointDirection()));
+      myDirectionY = -5*(Math.sin(normandy.getPointDirection()));//- normandy.myDirectionY;//-5*(Math.sin(normandy.getPointDirection()));
       timeCounter = 0;
       blink = false;
     } else {
@@ -714,6 +714,7 @@ boolean dIsPressed = false;
 boolean wIsPressed = false;
 boolean spaceIsPressed = false;
 
+int shotCounter = 0;
 
 public void keyPressed() {
   if (key == 'a' || key == 'A') {
@@ -731,7 +732,12 @@ public void keyPressed() {
     normandy.setDirectionX(0);
     normandy.setDirectionY(0);
   } else if (key == 32) {
-    bullets.add(new Bullet(normandy));
+    if (shotCounter + 10 < gameCounter) {
+      bullets.add(new Bullet(normandy));
+      shotCounter = gameCounter;
+    }
+     
+    
   }
 }
 
@@ -776,7 +782,7 @@ public void keyActions() {  // S is also set to do forwards.
     normandy.accelerate(0.3);
     blink = true;
     normandy.rotate(8);
-  } else if ()
+  } 
 }
 
 public void mousePressed() {
