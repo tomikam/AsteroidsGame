@@ -66,7 +66,7 @@ public void draw()
   
   if (game) { // GAME CODE
     background(0); // Showing game elements
-    controlAccel();
+    keyActions();
     
     for (int i = 0; i < starLength; i ++) {
       nebula[i].show();
@@ -249,11 +249,11 @@ class Blinker extends Floater implements Floatable
 
   public void move() {
     if (blink && (Math.random() > .9)   ) {
-      myCenterX = normandy.myCenterX;
-      myCenterY = normandy.myCenterY;
-      myPointDirection = normandy.myPointDirection - 180;
-      myDirectionX = - normandy.myDirectionX;
-      myDirectionY = - normandy.myDirectionY;
+      myCenterX = normandy.getX();
+      myCenterY = normandy.getY();
+      myPointDirection = normandy.getPointDirection() - 180;
+      myDirectionX = - normandy.myDirectionX;//-5*(Math.cos(normandy.getPointDirection()));
+      myDirectionY = - normandy.myDirectionY;//-5*(Math.sin(normandy.getPointDirection()));
       timeCounter = 0;
       blink = false;
     } else {
@@ -464,11 +464,6 @@ interface Floatable
   public void show();
 }
 
-boolean aIsPressed = false;
-boolean sIsPressed = false;
-boolean dIsPressed = false;
-boolean wIsPressed = false;
-boolean spaceIsPressed = false;
 
 abstract class TextBoundary
 {
@@ -713,6 +708,12 @@ public class Scene
   }
 }
 
+boolean aIsPressed = false;
+boolean sIsPressed = false;
+boolean dIsPressed = false;
+boolean wIsPressed = false;
+boolean spaceIsPressed = false;
+
 
 public void keyPressed() {
   if (key == 'a' || key == 'A') {
@@ -748,7 +749,7 @@ public void keyReleased() {
   }
 }
 
-public void controlAccel() {  // S is also set to do forwards. 
+public void keyActions() {  // S is also set to do forwards. 
   if (wIsPressed) {
     normandy.accelerate(0.3);
     blink = true;
@@ -775,7 +776,7 @@ public void controlAccel() {  // S is also set to do forwards.
     normandy.accelerate(0.3);
     blink = true;
     normandy.rotate(8);
-  }
+  } else if ()
 }
 
 public void mousePressed() {
@@ -850,5 +851,7 @@ Only allow scene change after a pause, to stop double clicks?
 Akward probelm with next scene - is it lookign at index or button #? YAY
 
 Special larger bukllets? Laser? Other firing methods?
+
+Fix asteroid collision. 
 
 */

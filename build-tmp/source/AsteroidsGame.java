@@ -265,11 +265,11 @@ class Blinker extends Floater implements Floatable
 
   public void move() {
     if (blink && (Math.random() > .9f)   ) {
-      myCenterX = normandy.myCenterX;
-      myCenterY = normandy.myCenterY;
-      myPointDirection = normandy.myPointDirection - 180;
-      myDirectionX = - normandy.myDirectionX;
-      myDirectionY = - normandy.myDirectionY;
+      myCenterX = normandy.getX();
+      myCenterY = normandy.getY();
+      myPointDirection = normandy.getPointDirection() - 180;
+      myDirectionX = -5*(Math.cos(normandy.getPointDirection()));//- normandy.myDirectionX;
+      myDirectionY = -5*(Math.sin(normandy.getPointDirection()));//- normandy.myDirectionY;
       timeCounter = 0;
       blink = false;
     } else {
@@ -866,6 +866,8 @@ Only allow scene change after a pause, to stop double clicks?
 Akward probelm with next scene - is it lookign at index or button #? YAY
 
 Special larger bukllets? Laser? Other firing methods?
+
+Fix asteroid collision. 
 
 */
   static public void main(String[] passedArgs) {
