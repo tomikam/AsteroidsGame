@@ -78,18 +78,17 @@ public void draw()
       bullets.get(i).move();
     }
      
-    /*for (int i = asteroids.size(); i > 0; i --) {
-      for (int j =  bullets.size(); j > 0; j --) {
+    for (int i = 0; i < asteroids.size(); i ++) {
+      for (int j = 0; j < bullets.size(); i ++) {
         float checkDestruction = dist( bullets.get(j).getX(), bullets.get(j).getY(), asteroids.get(i).getX(), asteroids.get(i).getY());
-        if (checkDestruction < 25) {
+        if (checkDestruction < 25*asteroids.get(i).getSizeMult() ) {
           asteroids.remove(asteroids.get(i));
           bullets.remove(bullets.get(j));
-          if (asteroids.size() > 0) {
-            i --;
-          }
+          break;
         }
+
       }
-    }*/
+    }
       
     for (int i = 0; i < asteroids.size(); i ++) {
       float checkCollision = dist( normandy.getX(), normandy.getY(), asteroids.get(i).getX(), asteroids.get(i).getY());
@@ -825,8 +824,8 @@ public void gameSetup() {
 //TO DO
 /*
 
-Make sure the simultanious keyu presses are dealt with. 
-Shape of Asteroids.
+Make sure the simultanious key presses are dealt with. 
+Shape of Asteroids - right now they mess up collision. 
 
 Farther collision distance.
 Scene-to-scene transition
