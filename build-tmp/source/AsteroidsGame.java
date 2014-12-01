@@ -268,8 +268,8 @@ class Blinker extends Floater implements Floatable
       myCenterX = normandy.getX();
       myCenterY = normandy.getY();
       myPointDirection = normandy.getPointDirection() - 180;
-      myDirectionX = -5*(Math.cos(normandy.getPointDirection()));//- normandy.myDirectionX;//-5*(Math.cos(normandy.getPointDirection()));
-      myDirectionY = -5*(Math.sin(normandy.getPointDirection()));//- normandy.myDirectionY;//-5*(Math.sin(normandy.getPointDirection()));
+      myDirectionX = 5*(Math.cos(normandy.getPointDirection() + 180));//- normandy.myDirectionX;//-5*(Math.cos(normandy.getPointDirection()));
+      myDirectionY = 5*(Math.sin(normandy.getPointDirection() + 180));//- normandy.myDirectionY;//-5*(Math.sin(normandy.getPointDirection()));
       timeCounter = 0;
       blink = false;
     } else {
