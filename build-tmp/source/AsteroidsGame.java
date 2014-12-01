@@ -310,22 +310,11 @@ class Asteroid extends Floater implements Floatable
   {
     corners = 6;
 
-    xCorners = new int[6];
-    yCorners = new int[6];
+    int[] setXArray = {16, 12, 0, -24, -32, -8};
+    int[] setYArray = {12, -20, -12, -24, 4, 24};
 
-    xCorners[0] = 16;
-    xCorners[1] = 12;
-    xCorners[2] = 0;
-    xCorners[3] = -24;
-    xCorners[4] = -32;
-    xCorners[5] = -8;
-    yCorners[0] = 12;
-    yCorners[1] = -20;
-    yCorners[2] = -12;
-    yCorners[3] = -24;
-    yCorners[4] = 4;
-    yCorners[5] = 24;
-
+    xCorners = setXArray;
+    yCorners = setYArray;
 
     myColor = color(0, 0, 255, 100);
     myCenterX = Math.random()*width;
@@ -751,9 +740,8 @@ public void keyPressed() {
     if (shotCounter + 10 < gameCounter) {
       bullets.add(new Bullet(normandy));
       shotCounter = gameCounter;
+      System.out.println("Test");
     }
-     
-    
   }
 }
 
@@ -825,7 +813,6 @@ public void resetGame() {
   normandy.setDirectionY(0);
   normandy.setPointDirection(0);
   gameCounter = 0;
-  System.out.println("Test");
 }
 
 public void deathActions() {
@@ -837,8 +824,7 @@ public void deathActions() {
       }
     }
     
-  } // Add more based opn what scene you go to after each death.
-
+  } // Add more based on what scene you go to after each death.
   deathCounter++;
 }
 
