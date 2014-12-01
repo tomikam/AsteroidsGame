@@ -109,7 +109,7 @@ public void draw()
       
     for (int i = 0; i < asteroids.size(); i ++) {
       float checkCollision = dist( normandy.getX(), normandy.getY(), asteroids.get(i).getX(), asteroids.get(i).getY());
-      if (checkCollision < 25 && gameCounter > 10) {
+      if (checkCollision < (25*asteroids.get(i).getSizeMult()) && gameCounter > 10) {
         game = false; dialouge = true; 
         deathActions();
       } 
@@ -267,9 +267,10 @@ class Blinker extends Floater implements Floatable
     if (blink && (Math.random() > .9f)   ) {
       myCenterX = normandy.getX();
       myCenterY = normandy.getY();
-      myPointDirection = normandy.getPointDirection() - 180;
-      myDirectionX = 5*(Math.cos(normandy.getPointDirection() + 180));//- normandy.myDirectionX;//-5*(Math.cos(normandy.getPointDirection()));
-      myDirectionY = 5*(Math.sin(normandy.getPointDirection() + 180));//- normandy.myDirectionY;//-5*(Math.sin(normandy.getPointDirection()));
+      myPointDirection = normandy.getPointDirection() - 180;      
+      double newRadians = (normandy.getPointDirection()*(Math.PI/180)) + Math.PI; 
+      myDirectionX = 5*(Math.cos(newRadians));
+      myDirectionY = 5*(Math.sin(newRadians));
       timeCounter = 0;
       blink = false;
     } else {
@@ -306,12 +307,14 @@ class Blinker extends Floater implements Floatable
 class Asteroid extends Floater implements Floatable
 {
   private double myRotSpeed;
+  private int sizeMult;
   public Asteroid()
   {
+    sizeMult = (int)(Math.random()*5);
     corners = 6;
 
-    int[] setXArray = {16, 12, 0, -24, -32, -8};
-    int[] setYArray = {12, -20, -12, -24, 4, 24};
+    int[] setXArray = {sizeMult*16, sizeMult*12, sizeMult*0, sizeMult*-24, sizeMult*-32, sizeMult*-8};
+    int[] setYArray = {sizeMult*12, sizeMult*-20, sizeMult*-12, sizeMult*-24, sizeMult*4, sizeMult*24};
 
     xCorners = setXArray;
     yCorners = setYArray;
@@ -335,6 +338,8 @@ class Asteroid extends Floater implements Floatable
   public double getDirectionY() {return myDirectionY;}
   public void setPointDirection(int degrees) {myPointDirection = degrees;}
   public double getPointDirection() {return myPointDirection;}
+  public void setSizeMult(int x) {sizeMult = x;}
+  public int getSizeMult() {return sizeMult;}
 
 
   public void move() {
@@ -719,7 +724,7 @@ boolean dIsPressed = false;
 boolean wIsPressed = false;
 boolean spaceIsPressed = false;
 
-int shotCounter = 0;
+int shotCounter = -10;
 
 public void keyPressed() {
   if (key == 'a' || key == 'A') {
@@ -813,6 +818,7 @@ public void resetGame() {
   normandy.setDirectionY(0);
   normandy.setPointDirection(0);
   gameCounter = 0;
+  shotCounter = -10;
 }
 
 public void deathActions() {
@@ -832,35 +838,42 @@ public void gameSetup() {
   //Find most recent scene, and from that scene extrapolate conditions on whcih level you're going into. 
 }
 
-//TO Do
+//TO DO
 /*
-Change the shape of the spaceship. Diamond with two wings. YAY!
-Make the spaceship have a drive. Ambitious particle drive v.s. color change? YAY!
+
 Make sure the simultanious keyu presses are dealt with. 
 Shape of Asteroids.
-Make hyperspace a limited resource later on, a way to escape a crisis. Powerups?
-STORY
-Make a scene class which displays text in three places as well as text along the top. Each scene has an index. YAY
-The scenes will get an arraylist. YAY
-Three buttons are made, in positions One, Two and Three. YAY
-If scene mode is active, the MousePressed function checks to see which scene is active, then which button is pressed, and pushes that scenes's choiceOne to position 0 of the Array. YAY
 
-Fix and simplfy the arraylist. YAY
-Get rid of the interface, it overcomplicates things. YAY
-Simplify everything into component functions. 
 Farther collision distance.
 Scene-to-scene transition
 Resetgame also resets asteroids
 
-Re-do constructors for scenes so that it can tell what I want just from the construction. YAY
-Can't just re-set gameCounter when dead because might then spend time doing stuff. YAY
-
 Only allow scene change after a pause, to stop double clicks?
-Akward probelm with next scene - is it lookign at index or button #? YAY
-
-Special larger bukllets? Laser? Other firing methods?
 
 Fix asteroid collision. 
+
+Asteroid Size
+
+
+LONG - TERM
+Special larger bukllets? Laser? Other firing methods?
+Simplify everything into component functions. 
+Make hyperspace a limited resource later on, a way to escape a crisis. Powerups?
+Hyperspace doesn't drop you on an asteroid. 
+
+COMPLETED
+Change the shape of the spaceship. Diamond with two wings. YAY!
+Make the spaceship have a drive. Ambitious particle drive v.s. color change? YAY!
+Make a scene class which displays text in three places as well as text along the top. Each scene has an index. YAY
+The scenes will get an arraylist. YAY
+Three buttons are made, in positions One, Two and Three. YAY
+If scene mode is active, the MousePressed function checks to see which scene is active, then which button is pressed, and pushes that scenes's choiceOne to position 0 of the Array. YAY
+Fix and simplfy the arraylist. YAY
+Get rid of the interface, it overcomplicates things. YAY
+Bullets don't work at first? YAY
+Akward probelm with next scene - is it lookign at index or button #? YAY
+Re-do constructors for scenes so that it can tell what I want just from the construction. YAY
+Can't just re-set gameCounter when dead because might then spend time doing stuff. YAY
 
 */
   static public void main(String[] passedArgs) {
