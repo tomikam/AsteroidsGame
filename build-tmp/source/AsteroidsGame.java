@@ -26,7 +26,9 @@ boolean togglePause;
 Button startButton, buttonOne, buttonTwo, buttonThree;
 ArrayList <Scene> scenes, pastScenes;
 ArrayList <Note> notes;
-Scene scene1, scene2, scene3, scene4, scene5, scene6, scene7, scene8, scene9, scene10, scene11, scene12, scene13, scene14, scene15, scene16, scene17, scene18, scene19, scene20;
+Scene scene1, scene2, scene3, scene4, scene5, scene6, scene7, scene8, scene9, scene10, scene11, scene12, 
+scene13, scene14, scene15, scene16, scene17, scene18, scene19, scene20,scene21, scene22, scene23, scene24, scene25,
+scene26, scene27, scene28; 
 Note note1;
 int gameCounter, deathCounter;
 //Bullet testB;
@@ -71,6 +73,14 @@ public void setup()
   scene18 = new Scene(18, "I'll tell you what you need in a second. Everything else comes after we keep you from dying.", "Okay...what do I have to do?", 0, "I still don't understand where I am.", 15);
   scene19 = new Scene(19, "Yes, you bloody well should remember. I'll tell you everything in a second, just pay attention now.", "Okay.", 0, "Is there ANYONE else I can talk to?", 13);
   scene20 = new Scene(20, 21, "You sure she can't hear us?", "Of course.");
+  scene21 = new Scene(21, 22, "...");
+  scene22 = new Scene(22, 23, "Please don't beat yourself up over what happened. It wasn't your fault.", "Please don't patronize me. Not my FAULT? This, if nothing else, was sure as hell my fault.");
+  scene23 = new Scene(23, 24, "Please calm down. The worst thing you can do is panic.", "She's damaged. She could have been KILLED! Did you see, at ALL, what just happened? She lost more than immediate memory, she she has no idea where sh--");
+  scene24 = new Scene(24, 25, "How do you know she's not just--", "That is not how ANYONE sees the world. She can't even conceptualize her own body, she's looking DOWN from our survaillence - I have no idea what it must feel like, as if she was floating in empty space --");
+  scene25 = new Scene(25, 26, "Look at me.", "...", "She is not insane. It's not your fault. And you know what? This might just be what we need.");
+  scene26 = new Scene(26, 27, "Look at what she just did! Look at how easy it was for her!", "What? I can't believe you would even -", "So you would weigh her life over everyone else's?");
+  scene27 = new Scene(27, 28, "All I need is for you to work with me. Please don't panic.", "Easier said than done", "The Overisight Council won't know a thing. Give her some idea of the stakes, and I'll keep working on the tech side - we WILL save the program.");
+  scene28 = new Scene(28, 29, "Who knows? We might even be able to save her.");
   //scene2 = new Scene(2, 0, "Don't worry, let's just try that again. We have plenty of time.");
   //scene3 = new Scene(3, 1, "Test1 - this is the drop scene for unwritten paths.", "Test2");
   //scene4 = new Scene(4, "... ", "You're not listening to me, are you?", 1);
@@ -80,10 +90,11 @@ public void setup()
   notes = new ArrayList<Note>();
   scenes.add(scene1); scenes.add(scene2); scenes.add(scene3); scenes.add(scene4); scenes.add(scene5); scenes.add(scene6); scenes.add(scene7); scenes.add(scene8); scenes.add(scene9); scenes.add(scene10);
   scenes.add(scene11); scenes.add(scene12); scenes.add(scene13); scenes.add(scene14); scenes.add(scene15); scenes.add(scene16); scenes.add(scene17); scenes.add(scene18); scenes.add(scene19); scenes.add(scene20);
+  scenes.add(scene21); scenes.add(scene22); scenes.add(scene23); scenes.add(scene24); scenes.add(scene25); scenes.add(scene26); scenes.add(scene27); scenes.add(scene28);
 
-  for (int i = 0; i < 1; i ++) { //Initialize objects. ??IF THIS BREAKS< PUT IT BACK TO 1 (int i = ...)
+  /*for (int i = 0; i < 1; i ++) { //Initialize objects. ??IF THIS BREAKS< PUT IT BACK TO 1 (int i = ...)
      asteroids.add( new Asteroid() );
-  }
+  }*/
   for (int i = 0; i < starLength; i ++) {
     nebula[i] = new Star();
   }
@@ -108,9 +119,11 @@ public void draw()
     keyActions();
     System.out.println(asteroids.size());
     if (asteroids.size() == 0) {
-      scenes.add(scenes.remove(19));
+      replaceScene(20);
       game = false; dialouge = true;
     }
+
+    
 
     for (int i = 0; i < starLength; i ++) {
       nebula[i].show();
@@ -121,6 +134,8 @@ public void draw()
       bullets.get(i).show();
       bullets.get(i).move();
     }
+
+
     outer:
     for (int i = 0; i < asteroids.size(); i ++) {
       for (int j = 0; j < bullets.size(); j ++) {
@@ -139,8 +154,6 @@ public void draw()
 
           asteroids.remove(asteroids.get(i));
           bullets.remove(bullets.get(j));
-          
-
 
           break outer;
         }
@@ -342,7 +355,7 @@ class Asteroid extends Floater implements Floatable
   private int sizeMult;
   public Asteroid()
   {
-    sizeMult = (int)(Math.random()*6);
+    sizeMult = (int)(Math.random()*5 + 1);
     corners = 6;
 
     int[] setXArray = {sizeMult*16, sizeMult*12, sizeMult*0, sizeMult*-24, sizeMult*-32, sizeMult*-8};
@@ -708,22 +721,35 @@ public class Scene
     fill(0, 0, 255);
 
     if (textBoxNum == 1) {
+      textSize(8);
+      text("USER AN-71-14", 100, 80);
+      textSize(40);
       text(myTextOne, 100, 100, 800, 400);
     } else if (textBoxNum == 2) {
       textSize(8);
-      text("USER", 100, 80);
+      text("USER CL-42-12", 100, 80);
+      textSize(40);
       text(myTextOne, 100, 100, 800, 400);
       //fill(160, 50, 168);
-      
+      textSize(8);
+      text("USER AN-71-14", 100, 280);
+      textSize(40);
       text(myTextTwo, 100, 300, 800, 400);
     } else if (textBoxNum == 3) {
+      textSize(8);
+      text("USER CL-42-12", 100, 80);
+      textSize(40);
       text(myTextOne, 100, 100, 800, 400);
       //fill(0, 0, 255);
-     
+      textSize(8);
+      text("USER AN-71-14", 100, 280);
+      textSize(40);
       text(myTextTwo, 100, 300, 800, 400);
       //fill(0, 255, 0);
-      
-      text(myTextTwo, 100, 500, 800, 400);
+      textSize(8);
+      text("USER CL-42-12", 100, 480);
+      textSize(40);
+      text(myTextThree, 100, 500, 800, 400);
     }
     
     fill(0, 0, 255);
@@ -762,11 +788,12 @@ public class Scene
     }
     
     
-    for (int i = 0; i < scenes.size(); i ++) {
+    /*for (int i = 0; i < scenes.size(); i ++) {
       if (scenes.get(i).getIndex() == chc) {
         scenes.add(0, scenes.remove(i));
       }
-    }
+    }*/
+    replaceScene(chc);
   }
 }
 
@@ -937,24 +964,26 @@ public void gameSetup() {
       notSafe = false;
     }
   }*/    
-  for (int i = asteroids.size(); i > 0; i --) {
+  /*for (int i = asteroids.size(); i > 0; i --) {
     asteroids.remove(0);
-  }
-  for (int i = 0; i < 10; i ++) {
+  }*/
+  for (int i = 0; i < 2; i ++) {
     asteroids.add( new Asteroid() );
   }
 }
 
-public void pauseGame() {
-  if (togglePause == true) {
-    noLoop();
-  } else {
-    frameRate(60);
+public void replaceScene(int chc) {
+  for (int i = 0; i < scenes.size(); i ++) {
+    if (scenes.get(i).getIndex() == chc) {
+        scenes.add(0, scenes.remove(i));
+      }
   }
 }
 
 //TO DO
 /*
+
+Choices effect final dialouge. 
 
 Function upon all asteroids gone that triggers congrats scene.
 
@@ -982,7 +1011,7 @@ Shape of Asteroids - right now they mess up collision. Farther collision distanc
 
 
 Scene-to-scene transition
-Resetgame also resets asteroids
+
 
 Only allow scene change after a pause, to stop double clicks?
 
@@ -990,11 +1019,12 @@ Fix asteroid collision.
 
 Make it so game never drops you onto asteroids. Problem - can the loop check unless the game started?
 
-
+ASsteroids initialize along sides, ship also. 
 
 
 
 LONG - TERM
+Figure out people's names in convo so that they can speak in different orders. 
 Special larger bukllets? Laser? Other firing methods?
 Simplify everything into component functions. 
 Make hyperspace a limited resource later on, a way to escape a crisis. Powerups?
