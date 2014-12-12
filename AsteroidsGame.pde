@@ -38,12 +38,12 @@ public void setup()
   normandy = new SpaceShip();
   
   scene1 = new Scene(1, "Wake up, Eva.", "What's going on?", 2, "Who are you?", 2, "Where am I?", 2);
-  scene2 =  new Scene(2, "What do you mean? You don't ... remember?", "[Lie] No, I do. Just nothing from just now.", 3, "I don't remember anything. Should I?", 12, "I'm not talking until you tell me where I am.", 17);
+  scene2 =  new Scene(2, "What do you mean? You don't ... remember?", "[Lie] No, I do. Just nothing from just now.", 3, "I don't remember anything. Should I?", 12, "I'm not talking until you explain where I am.", 17);
   scene3 = new Scene(3, "...", "Uh...are you listening to me?", 4);
   scene4 = new Scene(4, "Yes, yes, everything's fine. Listen carefully. I don't know exactly what's wrong, but you do know what's going on, right?", "Of course.", 5, "What exactly are we talking about?", 6, "Well, no.", 7);
   scene5 = new Scene(5, "Great. Everything's going to be fine. We can talk at length soon, but for now let me walk you through suriving.", "Wait, surviving?", 0, "...", 0);
   scene6 = new Scene(6, "The fact you might be about to die...Eva, please be honest with me, how much do you remember?", "I told you already. I KNOW what's going on.", 10, "I told you already, I rememeber some things, just not the last few years.", 10, "I ... I don't remember anything.", 1);
-  scene7 = new Scene(7, "Eva, please be honest with me, how much do you remember?", "I told you already. I KNOW what's going on.", 10, "I told you already, I rememeber some things, just not the last few years.", 10, "I ... I don't remember anything.", 11);
+  scene7 = new Scene(7, "Eva, please be honest with me, how much do you remember?", "I told you already. I KNOW what's going on.", 10, "I told you already, I didn't forgoet much.", 10, "I ... I don't remember anything.", 11);
   scene8 = new Scene(8, "Okay, look, we don't have time for this. You're in a lot of danger. I need you to listen to my instructions if you're going to survive.", "What do you mean, danger?", 9, "What do I have to do?", 0, "I don't trust you.", 9);
   scene9 = new Scene(9, "I don't have time to argue with you! We need to go, NOW!", "...", 0, "All I want is an explination.", 15, "You sound panicky, WHAT'S HAPPENING?", 15);
   scene10 = new Scene(10, "...", "Are you talking to someone?", 8, "What's going on?", 8);
@@ -58,13 +58,13 @@ public void setup()
   scene19 = new Scene(19, "Yes, you bloody well should remember. I'll tell you everything in a second, just pay attention now.", "Okay.", 0, "Is there ANYONE else I can talk to?", 13);
   scene20 = new Scene(20, 21, "You sure she can't hear us?", "Of course.");
   scene21 = new Scene(21, 22, "...");
-  scene22 = new Scene(22, 23, "Please don't beat yourself up over what happened. It wasn't your fault.", "Please don't patronize me. Not my FAULT? This, if nothing else, was sure as hell my fault.");
-  scene23 = new Scene(23, 24, "Please calm down. The worst thing you can do is panic.", "She's damaged. She could have been KILLED! Did you see, at ALL, what just happened? She lost more than immediate memory, she she has no idea where sh--");
+  scene22 = new Scene(22, 23, "Please don't beat yourself up over what happened. It wasn't your fault.", "Don't patronize me. Not my FAULT? This, if nothing else, was sure as hell my fault.");
+  scene23 = new Scene(23, 24, "I need you to calm down. The worst thing you can do is panic.", "She's damaged. She could have been KILLED! Did you see, at ALL, what just happened? She lost more than immediate memory, she she has no idea where sh--");
   scene24 = new Scene(24, 25, "How do you know she's not just--", "That is not how ANYONE sees the world. She can't even conceptualize her own body, she's looking DOWN from our survaillence - I have no idea what it must feel like, as if she was floating in empty space --");
   scene25 = new Scene(25, 26, "Look at me.", "...", "She is not insane. It's not your fault. And you know what? This might just be what we need.");
   scene26 = new Scene(26, 27, "Look at what she just did! Look at how easy it was for her!", "What? I can't believe you would even -", "So you would weigh her life over everyone else's?");
-  scene27 = new Scene(27, 28, "All I need is for you to work with me. Please don't panic.", "Easier said than done!", "The Overisight Council won't know a thing. Give her some idea of the stakes, and I'll keep working on the tech side - we WILL save the program.");
-  scene28 = new Scene(28, 29, "Who knows? We might even be able to save her.");
+  scene27 = new Scene(27, 28, "All I need is for you to work with me. Please don't panic.", "Easier said than done!", "The Overisight Council won't know a thing. Give her some idea of the stakes, and I'll keep working on the tech side.");
+  scene28 = new Scene(28, 29, "We WILL save the program. And who knows? We might even be able to save her.");
   //scene2 = new Scene(2, 0, "Don't worry, let's just try that again. We have plenty of time.");
   //scene3 = new Scene(3, 1, "Test1 - this is the drop scene for unwritten paths.", "Test2");
   //scene4 = new Scene(4, "... ", "You're not listening to me, are you?", 1);
