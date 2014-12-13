@@ -107,7 +107,7 @@ public void draw()
     background(0); // Showing game elements
     keyActions();
     System.out.println(asteroids.size());
-    if (asteroids.size() == 0) {
+    if (asteroids.size() == 1) {
       scenes.add(scenes.remove(19));
       game = false; dialouge = true;
     }
