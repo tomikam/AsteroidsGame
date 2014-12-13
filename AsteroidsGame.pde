@@ -64,7 +64,7 @@ public void setup()
   scene25 = new Scene(25, 26, "Look at me.", "...", "She is not insane. It's not your fault. And you know what? This might just be what we need.");
   scene26 = new Scene(26, 27, "Look at what she just did! Look at how easy it was for her!", "What? I can't believe you would even -", "So you would weigh her life over everyone else's?");
   scene27 = new Scene(27, 28, "All I need is for you to work with me. Please don't panic.", "Easier said than done!", "The Overisight Council won't know a thing. Give her some idea of the stakes, and I'll keep working on the tech side.");
-  scene28 = new Scene(28, 29, "We WILL save the program. And who knows? We might even be able to save her.");
+  scene28 = new Scene(28, 29, "We WILL save the program. We WILL save the Union. And who knows? We might even be able to save her.");
   //scene2 = new Scene(2, 0, "Don't worry, let's just try that again. We have plenty of time.");
   //scene3 = new Scene(3, 1, "Test1 - this is the drop scene for unwritten paths.", "Test2");
   //scene4 = new Scene(4, "... ", "You're not listening to me, are you?", 1);
@@ -95,13 +95,22 @@ public void setup()
 public void draw() 
 {
   //your code here
-  
+  if (aIsPressed) {
+  	System.out.print("a"); 
+  } else if (wIsPressed) {
+  	System.out.print("w");
+  } else if (sIsPressed) {
+  	System.out.print("s");
+  } else if (dIsPressed) {
+  	System.out.print("d");
+  }
+  System.out.println();
   //System.out.println( scenes.get(0).getTextOne() );
 
   if (game) { // GAME CODE
     background(0); // Showing game elements
     keyActions();
-    System.out.println(asteroids.size());
+    //System.out.println(asteroids.size());
     if (asteroids.size() == 0) {
       replaceScene(20);
       game = false; dialouge = true;
@@ -790,21 +799,18 @@ boolean spaceIsPressed = false;
 int shotCounter = -10;
 
 public void keyPressed() {
-  if (key == 'a' || key == 'A') {
-    aIsPressed = true;
-  } else if (key == 'd' || key =='D') {
-    dIsPressed = true;
-  } else if (key == 'w' || key == 'W') {
-    wIsPressed = true;
-  } else if (key == 's' || key == 'S') {
-    sIsPressed = true;
-  } else if (key == 'q' || key == 'Q') {
+  if (key == 'a' || key == 'A') {aIsPressed = true;}
+  if (key == 'd' || key =='D') {dIsPressed = true;}
+  if (key == 'w' || key == 'W') {wIsPressed = true;} 
+  if (key == 's' || key == 'S') {sIsPressed = true;}
+  if (key == 'q' || key == 'Q') {
     normandy.setX((int)(Math.random()*width));
     normandy.setY((int)(Math.random()*height));
     normandy.setPointDirection((int)(Math.random()*360));
     normandy.setDirectionX(0);
     normandy.setDirectionY(0);
-  } else if (key == 32) {
+  } 
+  if (key == 32) {
     if (shotCounter + 10 < gameCounter) {
       bullets.add(new Bullet(normandy));
       shotCounter = gameCounter;
@@ -813,31 +819,29 @@ public void keyPressed() {
 }
 
 public void keyReleased() {
-  if (key == 'a' || key == 'A') {
-    aIsPressed = false;
-  } else if (key == 'd' || key =='D') {
-    dIsPressed = false;
-  } else if (key == 'w' || key == 'W') {
-    wIsPressed = false;
-  } else if (key == 's' || key == 'S') {
-    sIsPressed = false;
-  } else if (keyCode == 32) {
-    spaceIsPressed = false;
-  }
+  if (key == 'a' || key == 'A') {aIsPressed = false;}
+  if (key == 'd' || key =='D') {dIsPressed = false;} 
+  if (key == 'w' || key == 'W') {wIsPressed = false;} 
+  if (key == 's' || key == 'S') {sIsPressed = false;} 
+  if (keyCode == 32) {spaceIsPressed = false;}
 }
 
 public void keyActions() {  // S is also set to do forwards. 
   if (wIsPressed) {
     normandy.accelerate(0.3);
     blink = true;
-  } else if (sIsPressed) {
+  } 
+  if (sIsPressed) {
     normandy.accelerate(0.3);
     blink = true;
-  } else if (aIsPressed) {
+  } 
+  if (aIsPressed) {
     normandy.rotate(-8);
-  } else if (dIsPressed) {
+  } 
+  if (dIsPressed) {
     normandy.rotate(8);
-  } else if (wIsPressed && aIsPressed) {
+  } 
+  /*if (wIsPressed && aIsPressed) {
     normandy.accelerate(0.3);
     blink = true;
     normandy.rotate(-8);
@@ -853,7 +857,8 @@ public void keyActions() {  // S is also set to do forwards.
     normandy.accelerate(0.3);
     blink = true;
     normandy.rotate(8);
-  } else if (spaceIsPressed) {
+  } */
+  if (spaceIsPressed) {
     togglePause = !togglePause;
   }
 
@@ -948,9 +953,9 @@ public void gameSetup() {
       notSafe = false;
     }
   }*/    
-  /*for (int i = asteroids.size(); i > 0; i --) {
+  for (int i = asteroids.size(); i > 0; i --) {
     asteroids.remove(0);
-  }*/
+  }
   for (int i = 0; i < 2; i ++) {
     asteroids.add( new Asteroid() );
   }
