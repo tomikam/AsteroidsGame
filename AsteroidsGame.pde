@@ -36,6 +36,9 @@ public void setup()
   asteroids = new ArrayList <Asteroid>();
   nebula = new Star[starLength];
   normandy = new SpaceShip();
+  /*Adding meaningless other info to trigger changes*/
+
+  
   
   scene1 = new Scene(1, "Wake up, Eva.", "What's going on?", 2, "Who are you?", 2, "Where am I?", 2);
   scene2 =  new Scene(2, "What do you mean? You don't ... remember?", "[Lie] No, I do. Just nothing from just now.", 3, "I don't remember anything. Should I?", 12, "I'm not talking until you explain where I am.", 17);
@@ -974,15 +977,11 @@ public void replaceScene(int chc) {
 
 Choices effect final dialouge. 
 
-Function upon all asteroids gone that triggers congrats scene.
 
-Implement pause scene (noLoop when turned on) for pause and instructions. 
 
-Finish early dialouge YAY
+Implement pause scene (noLoop when turned on) for pause and instructions. Scripting works how? Possibly stops Asteroid motion, doesn't build them, a massive if-then tree which buildGame taps into to initialize certain variables, and then there's a function that controls all of this, dep. on variables and gameCounter
 
-Names/labels
 
-Scene ending so far. 
 
 
 
@@ -995,7 +994,7 @@ Set up second array of "passed scenes"
 2 menu buttons, one for story, one straight to game
 
 
-Make sure the simultanious key presses are dealt with. 
+
 Shape of Asteroids - right now they mess up collision. Farther collision distance.
 
 
@@ -1004,7 +1003,7 @@ Scene-to-scene transition
 
 Only allow scene change after a pause, to stop double clicks?
 
-Fix asteroid collision. 
+
 
 Make it so game never drops you onto asteroids. Problem - can the loop check unless the game started?
 
@@ -1035,4 +1034,9 @@ Akward probelm with next scene - is it lookign at index or button #? YAY
 Re-do constructors for scenes so that it can tell what I want just from the construction. YAY
 Can't just re-set gameCounter when dead because might then spend time doing stuff. YAY
 Asteroid Size YAY
+Finish early dialouge YAY
+Names/labels YAY
+Scene ending so far. YAY
+Function upon all asteroids gone that triggers congrats scene. YAY
+Make sure the simultanious key presses are dealt with. YAY
 */
