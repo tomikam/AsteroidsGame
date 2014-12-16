@@ -98,6 +98,9 @@ public void setup()
 }
 
 public void draw() {
+
+  System.out.println(scenes.get(0).getAnswerNum());
+
   if (game) { // GAME CODE
     background(0); // Showing game elements
     keyActions();
@@ -914,7 +917,7 @@ public void gameSetup() {
   for (int i = asteroids.size(); i > 0; i --) {
     asteroids.remove(0);
   }
-  for (int i = 0; i < 2; i ++) {
+  for (int i = 0; i < 1; i ++) {
     asteroids.add( new Asteroid() );
   }
 }
