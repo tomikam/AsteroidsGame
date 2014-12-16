@@ -786,15 +786,9 @@ public class Scene
         chc = choiceThree;
       }
     if (chc == 0) {
-      game = true; dialouge = false; /*resetGame();*/ gameSetup();
+      game = true; dialouge = false; gameSetup();
     }
     
-    
-    /*for (int i = 0; i < scenes.size(); i ++) {
-      if (scenes.get(i).getIndex() == chc) {
-        scenes.add(0, scenes.remove(i));
-      }
-    }*/
     replaceScene(chc);
   }
 }
@@ -804,6 +798,7 @@ boolean sIsPressed = false;
 boolean dIsPressed = false;
 boolean wIsPressed = false;
 boolean spaceIsPressed = false;
+boolean pIsPressed = false;
 
 int shotCounter = -10;
 
@@ -850,23 +845,6 @@ public void keyActions() {  // S is also set to do forwards.
   if (dIsPressed) {
     normandy.rotate(8);
   } 
-  /*if (wIsPressed && aIsPressed) {
-    normandy.accelerate(0.3);
-    blink = true;
-    normandy.rotate(-8);
-  } else if (wIsPressed && dIsPressed) {
-    normandy.accelerate(0.3);
-    blink = true;
-    normandy.rotate(8);
-  } else if (sIsPressed && aIsPressed) {
-    normandy.accelerate(0.3);
-    blink = true;
-    normandy.rotate(-8);
-  } else if (sIsPressed && dIsPressed) {
-    normandy.accelerate(0.3);
-    blink = true;
-    normandy.rotate(8);
-  } */
   if (spaceIsPressed) {
     togglePause = !togglePause;
   }
@@ -919,19 +897,9 @@ public boolean asteroidSpaceShipCollision() {
   return false;
 }
 
-/*public void resetGame() {
-  normandy.setX( (int)(Math.random()*width) );
-  normandy.setY( (int)(Math.random()*height) );
-  normandy.setDirectionX(0);
-  normandy.setDirectionY(0);
-  normandy.setPointDirection(0);
-  gameCounter = 0;
-  shotCounter = -10;
-}*/
+
 
 public void deathActions() {
-  //resetGame();
-  //gameSetup();
   if (deathCounter == 0) {
     for (int i = 0; i < scenes.size(); i ++) {
       if (scenes.get(i).getIndex() == 16) {
@@ -951,19 +919,11 @@ public void deathActions() {
 }
 
 public void gameSetup() {
-  //Find most recent scene, and from that scene extrapolate conditions on whcih level you're going into. 
-  
-  /*resetGame();
-  notSafe = true;
-  while (notSafe) {
-    if (asteroidSpaceShipCollision(1000)) {
-      resetGame();
-    } else {
-      notSafe = false;
-    }
-  }*/    
-  normandy.setX( (int)(Math.random()*width) );
-  normandy.setY( (int)(Math.random()*height) );
+  //Find most recent scene, and from that scene extrapolate conditions on whcih level you're going into.   
+  /*normandy.setX( (int)(Math.random()*width) );
+  normandy.setY( (int)(Math.random()*height) );*/
+  normandy.setX(width/2);
+  normandy.setY(height/2);
   normandy.setDirectionX(0);
   normandy.setDirectionY(0);
   normandy.setPointDirection(0);
