@@ -12,7 +12,7 @@ ArrayList <Scene> scenes, pastScenes;
 ArrayList <Note> notes;
 Scene scene1, scene2, scene3, scene4, scene5, scene6, scene7, scene8, scene9, scene10, scene11, scene12, 
 scene13, scene14, scene15, scene16, scene17, scene18, scene19, scene20,scene21, scene22, scene23, scene24, scene25,
-scene26, scene27, scene28; 
+scene26, scene27, scene28, scene29, scene30; 
 Note note1;
 int gameCounter, deathCounter;
 //Bullet testB;
@@ -68,6 +68,8 @@ public void setup()
   scene26 = new Scene(26, 27, "Look at what she just did! Look at how easy it was for her!", "What? I can't believe you would even -", "So you would weigh her life over everyone else's?");
   scene27 = new Scene(27, 28, "All I need is for you to work with me. Please don't panic.", "Easier said than done!", "The Overisight Council won't know a thing. Give her some idea of the stakes, and I'll keep working on the tech side.");
   scene28 = new Scene(28, 29, "We WILL save the program. We WILL save the Union. And who knows? We might even be able to save her.");
+  scene29 = new FinalScene(29);
+  scene30 = new Scene(30, "...", "Why won't you answer?", 0, "Isn't this your job?", 0, "Have you considered how terrifying this is?", 0);
   //scene2 = new Scene(2, 0, "Don't worry, let's just try that again. We have plenty of time.");
   //scene3 = new Scene(3, 1, "Test1 - this is the drop scene for unwritten paths.", "Test2");
   //scene4 = new Scene(4, "... ", "You're not listening to me, are you?", 1);
@@ -77,7 +79,7 @@ public void setup()
   notes = new ArrayList<Note>();
   scenes.add(scene1); scenes.add(scene2); scenes.add(scene3); scenes.add(scene4); scenes.add(scene5); scenes.add(scene6); scenes.add(scene7); scenes.add(scene8); scenes.add(scene9); scenes.add(scene10);
   scenes.add(scene11); scenes.add(scene12); scenes.add(scene13); scenes.add(scene14); scenes.add(scene15); scenes.add(scene16); scenes.add(scene17); scenes.add(scene18); scenes.add(scene19); scenes.add(scene20);
-  scenes.add(scene21); scenes.add(scene22); scenes.add(scene23); scenes.add(scene24); scenes.add(scene25); scenes.add(scene26); scenes.add(scene27); scenes.add(scene28);
+  scenes.add(scene21); scenes.add(scene22); scenes.add(scene23); scenes.add(scene24); scenes.add(scene25); scenes.add(scene26); scenes.add(scene27); scenes.add(scene28); scenes.add(scene29); scenes.add(scene30);
 
   /*for (int i = 0; i < 1; i ++) { //Initialize objects. ??IF THIS BREAKS< PUT IT BACK TO 1 (int i = ...)
      asteroids.add( new Asteroid() );
@@ -96,10 +98,6 @@ public void setup()
 }
 
 public void draw() {
-
-  //your code here
-
-
   if (game) { // GAME CODE
     background(0); // Showing game elements
     keyActions();
@@ -108,8 +106,6 @@ public void draw() {
       replaceScene(20);
       game = false; dialouge = true;
     }
-
-    
 
     for (int i = 0; i < starLength; i ++) {
       nebula[i].show();
@@ -121,7 +117,6 @@ public void draw() {
       bullets.get(i).move();
     }
 
-
     outer:
     for (int i = 0; i < asteroids.size(); i ++) {
       for (int j = 0; j < bullets.size(); j ++) {
@@ -132,11 +127,6 @@ public void draw() {
             Asteroid bob2 = new Asteroid(  asteroids.get(i).getX(), asteroids.get(i).getY(), asteroids.get(i).getSizeMult() -1 );
             asteroids.add(bob1); asteroids.add(bob2);
           }
-          
-          /*if (asteroids.size() == 1) {
-            scenes.add(0, scenes.remove(20));
-            game = false; dialouge = true;
-          }*/
 
           asteroids.remove(asteroids.get(i));
           bullets.remove(bullets.get(j));
@@ -187,10 +177,7 @@ public void draw() {
     }
   }
 }
-  
-
-
-
+ 
 class SpaceShip extends Floater implements Floatable
 {   
     //your code here
@@ -763,7 +750,6 @@ public class Scene
         chc = choiceOne;
       } else if (checkIfInside(buttonOne)) {
         chc = choiceOne;
-
       } else if (checkIfInside(buttonTwo)) {
         chc = choiceTwo;
       } else if (checkIfInside(buttonThree)) {
@@ -772,9 +758,21 @@ public class Scene
     if (chc == 0) {
       game = true; dialouge = false; gameSetup();
     }
-    
     replaceScene(chc);
   }
+}
+
+public class FinalScene extends Scene
+{
+	FinalScene(int indx) {
+		myIndex = indx;
+	}
+	public void show() {
+		background(0);
+    textSize(60);
+    fill(0, 0, 255);
+    text("TO BE CONTINUED SOON ...", 100, 100, width - 200, height);
+	}
 }
 
 boolean aIsPressed = false;
@@ -884,9 +882,9 @@ public boolean asteroidSpaceShipCollision() {
 
 
 public void deathActions() {
-  if (deathCounter == 0) {
+  if (deathCounter == 1) {
     for (int i = 0; i < scenes.size(); i ++) {
-      if (scenes.get(i).getIndex() == 16) {
+      if (scenes.get(i).getIndex() == 30) {
         scenes.add(0, scenes.remove(i));
       }
     }
@@ -916,7 +914,7 @@ public void gameSetup() {
   for (int i = asteroids.size(); i > 0; i --) {
     asteroids.remove(0);
   }
-  for (int i = 0; i < 8; i ++) {
+  for (int i = 0; i < 2; i ++) {
     asteroids.add( new Asteroid() );
   }
 }
@@ -929,6 +927,10 @@ public void replaceScene(int chc) {
   }
 }
 
+
+public void scriptedActions() {
+	//Lots of triggers, lots of events. 
+}
 //TO DO
 /*
 
@@ -938,39 +940,23 @@ Choices effect final dialouge.
 
 Implement pause scene (noLoop when turned on) for pause and instructions. Scripting works how? Possibly stops Asteroid motion, doesn't build them, a massive if-then tree which buildGame taps into to initialize certain variables, and then there's a function that controls all of this, dep. on variables and gameCounter
 
-
-
-
-
-
-
-
-
 Set up second array of "passed scenes"
 
 2 menu buttons, one for story, one straight to game
 
-
-
 Shape of Asteroids - right now they mess up collision. Farther collision distance.
-
 
 Scene-to-scene transition
 
-
 Only allow scene change after a pause, to stop double clicks?
 
-
-
-Make it so game never drops you onto asteroids. Problem - can the loop check unless the game started?
-
-ASsteroids initialize along sides, ship also. 
+Clean-up
 
 
 
 LONG - TERM
 Figure out people's names in convo so that they can speak in different orders. 
-Special larger bukllets? Laser? Other firing methods?
+Special larger bullets? Laser? Other firing methods?
 Simplify everything into component functions. 
 Make hyperspace a limited resource later on, a way to escape a crisis. Powerups?
 Hyperspace doesn't drop you on an asteroid. 
