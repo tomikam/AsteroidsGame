@@ -95,20 +95,10 @@ public void setup()
   buttonThree = new ClearButton(75, 580, 850, 100);
 }
 
-public void draw() 
-{
+public void draw() {
+
   //your code here
-  if (aIsPressed) {
-  	System.out.print("a"); 
-  } else if (wIsPressed) {
-  	System.out.print("w");
-  } else if (sIsPressed) {
-  	System.out.print("s");
-  } else if (dIsPressed) {
-  	System.out.print("d");
-  }
-  System.out.println();
-  //System.out.println( scenes.get(0).getTextOne() );
+
 
   if (game) { // GAME CODE
     background(0); // Showing game elements
@@ -780,7 +770,7 @@ public class Scene
         chc = choiceThree;
       }
     if (chc == 0) {
-      game = true; dialouge = false; resetGame(); gameSetup();
+      game = true; dialouge = false; /*resetGame();*/ gameSetup();
     }
     
     
@@ -913,7 +903,7 @@ public boolean asteroidSpaceShipCollision() {
   return false;
 }
 
-public void resetGame() {
+/*public void resetGame() {
   normandy.setX( (int)(Math.random()*width) );
   normandy.setY( (int)(Math.random()*height) );
   normandy.setDirectionX(0);
@@ -921,11 +911,11 @@ public void resetGame() {
   normandy.setPointDirection(0);
   gameCounter = 0;
   shotCounter = -10;
-}
+}*/
 
 public void deathActions() {
-  resetGame();
-  gameSetup();
+  //resetGame();
+  //gameSetup();
   if (deathCounter == 0) {
     for (int i = 0; i < scenes.size(); i ++) {
       if (scenes.get(i).getIndex() == 16) {
@@ -956,10 +946,17 @@ public void gameSetup() {
       notSafe = false;
     }
   }*/    
+  normandy.setX( (int)(Math.random()*width) );
+  normandy.setY( (int)(Math.random()*height) );
+  normandy.setDirectionX(0);
+  normandy.setDirectionY(0);
+  normandy.setPointDirection(0);
+  gameCounter = 0;
+  shotCounter = -10;
   for (int i = asteroids.size(); i > 0; i --) {
     asteroids.remove(0);
   }
-  for (int i = 0; i < 2; i ++) {
+  for (int i = 0; i < 8; i ++) {
     asteroids.add( new Asteroid() );
   }
 }
