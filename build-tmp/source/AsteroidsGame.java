@@ -115,7 +115,7 @@ public void setup()
 
 public void draw() {
 
-  System.out.println(scenes.get(0).getAnswerNum());
+  //System.out.println(scenes.get(0).getAnswerNum());
 
   if (game) { // GAME CODE
     background(0); // Showing game elements

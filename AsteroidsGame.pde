@@ -38,14 +38,17 @@ public void setup()
   normandy = new SpaceShip();
   /*Adding meaningless other info to trigger changes*/
 
+  for (int i = 0; i < 30; i ++) {
+    scenes.add(new Scene());
+  }
+
   
-  
-  scene1 = new Scene(1, "Wake up, Eva.", "What's going on?", 2, "Who are you?", 2, "Where am I?", 2);
-  scene2 =  new Scene(2, "What do you mean? You don't ... remember?", "[Lie] No, I do. Just nothing from just now.", 3, "I don't remember anything. Should I?", 12, "I'm not talking until you explain where I am.", 17);
-  scene3 = new Scene(3, "...", "Uh...are you listening to me?", 4);
-  scene4 = new Scene(4, "Yes, yes, everything's fine. Listen carefully. I don't know exactly what's wrong, but you do know what's going on, right?", "Of course.", 5, "What exactly are we talking about?", 6, "Well, no.", 7);
-  scene5 = new Scene(5, "Great. Everything's going to be fine. We can talk at length soon, but for now let me walk you through suriving.", "Wait, surviving?", 0, "...", 0);
-  scene6 = new Scene(6, "The fact you might be about to die...Eva, please be honest with me, how much do you remember?", "I told you already. I KNOW what's going on.", 10, "I told you already, I rememeber some things, just not the last few years.", 10, "I ... I don't remember anything.", 1);
+  scenes.get(1) = new Scene(1, "Wake up, Eva.", "What's going on?", 2, "Who are you?", 2, "Where am I?", 2);
+  scenes.get(2) = new Scene(2, "What do you mean? You don't ... remember?", "[Lie] No, I do. Just nothing from just now.", 3, "I don't remember anything. Should I?", 12, "I'm not talking until you explain where I am.", 17);
+  scenes.get(3) = new Scene(3, "...", "Uh...are you listening to me?", 4);
+  scenes.get(4) = new Scene(4, "Yes, yes, everything's fine. Listen carefully. I don't know exactly what's wrong, but you do know what's going on, right?", "Of course.", 5, "What exactly are we talking about?", 6, "Well, no.", 7);
+  scenes.get(5) = new Scene(5, "Great. Everything's going to be fine. We can talk at length soon, but for now let me walk you through suriving.", "Wait, surviving?", 0, "...", 0);
+  scenes.get(6) = new Scene(6, "The fact you might be about to die...Eva, please be honest with me, how much do you remember?", "I told you already. I KNOW what's going on.", 10, "I told you already, I rememeber some things, just not the last few years.", 10, "I ... I don't remember anything.", 1);
   scene7 = new Scene(7, "Eva, please be honest with me, how much do you remember?", "I told you already. I KNOW what's going on.", 10, "I told you already, I didn't forgoet much.", 10, "I ... I don't remember anything.", 11);
   scene8 = new Scene(8, "Okay, look, we don't have time for this. You're in a lot of danger. I need you to listen to my instructions if you're going to survive.", "What do you mean, danger?", 9, "What do I have to do?", 0, "I don't trust you.", 9);
   scene9 = new Scene(9, "I don't have time to argue with you! We need to go, NOW!", "...", 0, "All I want is an explination.", 15, "You sound panicky, WHAT'S HAPPENING?", 15);
@@ -99,7 +102,7 @@ public void setup()
 
 public void draw() {
 
-  System.out.println(scenes.get(0).getAnswerNum());
+  //System.out.println(scenes.get(0).getAnswerNum());
 
   if (game) { // GAME CODE
     background(0); // Showing game elements
