@@ -43,7 +43,7 @@ public void setup()
   }
 
   
-  scenes.get(1) = new Scene(1, "Wake up, Eva.", "What's going on?", 2, "Who are you?", 2, "Where am I?", 2);
+  scenes.set(1, new Scene(1, "Wake up, Eva.", "What's going on?", 2, "Who are you?", 2, "Where am I?", 2) );
   scenes.get(2) = new Scene(2, "What do you mean? You don't ... remember?", "[Lie] No, I do. Just nothing from just now.", 3, "I don't remember anything. Should I?", 12, "I'm not talking until you explain where I am.", 17);
   scenes.get(3) = new Scene(3, "...", "Uh...are you listening to me?", 4);
   scenes.get(4) = new Scene(4, "Yes, yes, everything's fine. Listen carefully. I don't know exactly what's wrong, but you do know what's going on, right?", "Of course.", 5, "What exactly are we talking about?", 6, "Well, no.", 7);
@@ -102,12 +102,12 @@ public void setup()
 
 public void draw() {
 
-  //System.out.println(scenes.get(0).getAnswerNum());
+  
 
   if (game) { // GAME CODE
     background(0); // Showing game elements
     keyActions();
-    //System.out.println(asteroids.size());
+  
     if (asteroids.size() == 0) {
       replaceScene(20);
       game = false; dialouge = true;
