@@ -24,93 +24,86 @@ Blinker[] blinkers;
 boolean menu, game, dialouge;
 boolean togglePause;
 Button startButton, buttonOne, buttonTwo, buttonThree;
-ArrayList <Scene> scenes, pastScenes;
+ArrayList <Scene> /*scenes,*/ pastScenes;
+Scene[] scenes;
 ArrayList <Note> notes;
-Scene scene1, scene2, scene3, scene4, scene5, scene6, scene7, scene8, scene9, scene10, scene11, scene12, 
-scene13, scene14, scene15, scene16, scene17, scene18, scene19, scene20,scene21, scene22, scene23, scene24, scene25,
-scene26, scene27, scene28, scene29, scene30; 
+
 Note note1;
 int gameCounter, deathCounter;
-//Bullet testB;
 ArrayList <Bullet> bullets;
-Boolean notSafe;
+
+
+
 
 public void setup() 
 {
-  
+  size(1000, 700);
+
   menu = true;
   togglePause = false;
-  //game = true;
   gameCounter = 0;
-  //GAME SETUP
-  size(1000, 700);
-  //thingiesLength = 12; //Declare Arrays
-  starLength = 100;
+  //game = true;
   
+  starLength = 100;//Declare Arrays
   bullets = new ArrayList <Bullet>();
   blinkers = new Blinker[10];
   asteroids = new ArrayList <Asteroid>();
   nebula = new Star[starLength];
   normandy = new SpaceShip();
-  /*Adding meaningless other info to trigger changes*/
 
-  for (int i = 0; i < 30; i ++) {
-    scenes.add(new Scene());
-  }
+  pastScenes = new ArrayList <Scene>();
 
-  
-  scenes.set(1, new Scene(1, "Wake up, Eva.", "What's going on?", 2, "Who are you?", 2, "Where am I?", 2) );
-  scenes.get(2) = new Scene(2, "What do you mean? You don't ... remember?", "[Lie] No, I do. Just nothing from just now.", 3, "I don't remember anything. Should I?", 12, "I'm not talking until you explain where I am.", 17);
-  scenes.get(3) = new Scene(3, "...", "Uh...are you listening to me?", 4);
-  scenes.get(4) = new Scene(4, "Yes, yes, everything's fine. Listen carefully. I don't know exactly what's wrong, but you do know what's going on, right?", "Of course.", 5, "What exactly are we talking about?", 6, "Well, no.", 7);
-  scenes.get(5) = new Scene(5, "Great. Everything's going to be fine. We can talk at length soon, but for now let me walk you through suriving.", "Wait, surviving?", 0, "...", 0);
-  scenes.get(6) = new Scene(6, "The fact you might be about to die...Eva, please be honest with me, how much do you remember?", "I told you already. I KNOW what's going on.", 10, "I told you already, I rememeber some things, just not the last few years.", 10, "I ... I don't remember anything.", 1);
-  scene7 = new Scene(7, "Eva, please be honest with me, how much do you remember?", "I told you already. I KNOW what's going on.", 10, "I told you already, I didn't forgoet much.", 10, "I ... I don't remember anything.", 11);
-  scene8 = new Scene(8, "Okay, look, we don't have time for this. You're in a lot of danger. I need you to listen to my instructions if you're going to survive.", "What do you mean, danger?", 9, "What do I have to do?", 0, "I don't trust you.", 9);
-  scene9 = new Scene(9, "I don't have time to argue with you! We need to go, NOW!", "...", 0, "All I want is an explination.", 15, "You sound panicky, WHAT'S HAPPENING?", 15);
-  scene10 = new Scene(10, "...", "Are you talking to someone?", 8, "What's going on?", 8);
-  scene11 = new Scene(11, "... Okay. Listen to me. I don't know what you were trying to do, but you're in a lot of danger and you need to listen to me if you're going to survive.", "Danger?", 10, "Of course", 0);
-  scene12 = new Scene(12, "Yes, you bloody well should. ... Look, nevermind. I need you to listen to me. You're in a lot of danger, but I'm going to walk you through it.", "What kind of danger?", 13, "Of course.", 0, "You didn't answer my questions. Who are you?", 13);
-  scene13 = new Scene(13, "...", "Are you talking to someone?", 14, "What's going on?", 14);
-  scene14 = new Scene(14, "We don't have time for this. I promise I'll answer all your questions in a moment.", "Of course", 0, "I think I deserve to know what's going on.", 15);
-  scene15 = new Scene(15, "It wasn't a request. WE DON'T HAVE TIME. I WILL get you out of this, amnesia or not.", "Wait--", 0);
-  scene16 = new Scene(16, "Don't worry, you're ok. We'll just try this again.", "What? I thought I was in danger!", 0, "How could you have saved me?", 0, "I really, really want an explination. Now.", 0);
-  scene17 = new Scene(17, "You don't...look, Eva, please work with me here. You're in a lot of danger, and my job is to walk you through getting out.", "What kind of danger?", 18, "Should I remember?", 19, "I don't have any reason to trust you.", 14);
-  scene18 = new Scene(18, "I'll tell you what you need in a second. Everything else comes after we keep you from dying.", "Okay...what do I have to do?", 0, "I still don't understand where I am.", 15);
-  scene19 = new Scene(19, "Yes, you bloody well should remember. I'll tell you everything in a second, just pay attention now.", "Okay.", 0, "Is there ANYONE else I can talk to?", 13);
-  scene20 = new Scene(20, 21, "You sure she can't hear us?", "Of course.");
-  scene21 = new Scene(21, 22, "...");
-  scene22 = new Scene(22, 23, "Please don't beat yourself up over what happened. It wasn't your fault.", "Don't patronize me. Not my FAULT? This, if nothing else, was sure as hell my fault.");
-  scene23 = new Scene(23, 24, "I need you to calm down. The worst thing you can do is panic.", "She's damaged. She could have been KILLED! Did you see, at ALL, what just happened? She lost more than immediate memory, she she has no idea where sh--");
-  scene24 = new Scene(24, 25, "How do you know she's not just--", "That is not how ANYONE sees the world. She can't even conceptualize her own body, she's looking DOWN from our survaillence - I have no idea what it must feel like, as if she was floating in empty space --");
-  scene25 = new Scene(25, 26, "Look at me.", "...", "She is not insane. It's not your fault. And you know what? This might just be what we need.");
-  scene26 = new Scene(26, 27, "Look at what she just did! Look at how easy it was for her!", "What? I can't believe you would even -", "So you would weigh her life over everyone else's?");
-  scene27 = new Scene(27, 28, "All I need is for you to work with me. Please don't panic.", "Easier said than done!", "The Overisight Council won't know a thing. Give her some idea of the stakes, and I'll keep working on the tech side.");
-  scene28 = new Scene(28, 29, "We WILL save the program. We WILL save the Union. And who knows? We might even be able to save her.");
-  scene29 = new FinalScene(29);
-  scene30 = new Scene(30, "...", "Why won't you answer?", 0, "Isn't this your job?", 0, "Have you considered how terrifying this is?", 0);
-  //scene2 = new Scene(2, 0, "Don't worry, let's just try that again. We have plenty of time.");
-  //scene3 = new Scene(3, 1, "Test1 - this is the drop scene for unwritten paths.", "Test2");
-  //scene4 = new Scene(4, "... ", "You're not listening to me, are you?", 1);
-  //scene5 = new Scene(5, "Okay, interesting. Do you think you're thinking clearly right now?", "What? Of course I am!", 3, "What do you mean, 'thinking clearly'?", 3, "I'm not going to answer you until you tell me what is going on.", 3);
-  note1 = new Note(300, 35, 350, 100, "Test test test test test test test test test test test", 100, 20);
-  scenes = new ArrayList <Scene>();
-  notes = new ArrayList<Note>();
-  scenes.add(scene1); scenes.add(scene2); scenes.add(scene3); scenes.add(scene4); scenes.add(scene5); scenes.add(scene6); scenes.add(scene7); scenes.add(scene8); scenes.add(scene9); scenes.add(scene10);
-  scenes.add(scene11); scenes.add(scene12); scenes.add(scene13); scenes.add(scene14); scenes.add(scene15); scenes.add(scene16); scenes.add(scene17); scenes.add(scene18); scenes.add(scene19); scenes.add(scene20);
-  scenes.add(scene21); scenes.add(scene22); scenes.add(scene23); scenes.add(scene24); scenes.add(scene25); scenes.add(scene26); scenes.add(scene27); scenes.add(scene28); scenes.add(scene29); scenes.add(scene30);
-
-  /*for (int i = 0; i < 1; i ++) { //Initialize objects. ??IF THIS BREAKS< PUT IT BACK TO 1 (int i = ...)
-     asteroids.add( new Asteroid() );
+  scenes = new Scene[31];
+  /*for (int i = 0; i < 30; i ++) { //Add Scenes
+      scenes.add(new Scene());
   }*/
-  for (int i = 0; i < starLength; i ++) {
+  scenes[0] = new Scene();
+  scenes[1] = new Scene(1, "Wake up, Eva.", "What's going on?", 2, "Who are you?", 2, "Where am I?", 2);
+  scenes[2] = new Scene(2, "What do you mean? You don't ... remember?", "[Lie] No, I do. Just nothing from just now.", 3, "I don't remember anything. Should I?", 12, "I'm not talking until you explain where I am.", 17); 
+  scenes[3] = new Scene(3, "...", "Uh...are you listening to me?", 4);  
+  scenes[4] = new Scene(4, "Yes, yes, everything's fine. Listen carefully. I don't know exactly what's wrong, but you do know what's going on, right?", "Of course.", 5, "What exactly are we talking about?", 6, "Well, no.", 7);
+  scenes[5] = new Scene(5, "Great. Everything's going to be fine. We can talk at length soon, but for now let me walk you through suriving.", "Wait, surviving?", 0, "...", 0);
+  scenes[6] = new Scene(6, "The fact you might be about to die...Eva, please be honest with me, how much do you remember?", "I told you already. I KNOW what's going on.", 10, "I told you already, I rememeber some things, just not the last few years.", 10, "I ... I don't remember anything.", 1);
+  scenes[7] = new Scene(7, "Eva, please be honest with me, how much do you remember?", "I told you already. I KNOW what's going on.", 10, "I told you already, I didn't forgoet much.", 10, "I ... I don't remember anything.", 11);  
+  scenes[8] = new Scene(8, "Okay, look, we don't have time for this. You're in a lot of danger. I need you to listen to my instructions if you're going to survive.", "What do you mean, danger?", 9, "What do I have to do?", 0, "I don't trust you.", 9);
+  scenes[9] = new Scene(9, "I don't have time to argue with you! We need to go, NOW!", "...", 0, "All I want is an explination.", 15, "You sound panicky, WHAT'S HAPPENING?", 15); 
+  scenes[10] = new Scene(10, "...", "Are you talking to someone?", 8, "What's going on?", 8);
+  scenes[11] = new Scene(11, "... Okay. Listen to me. I don't know what you were trying to do, but you're in a lot of danger and you need to listen to me if you're going to survive.", "Danger?", 10, "Of course!", 0); 
+  scenes[12] = new Scene(12, "Yes, you bloody well should. ... Look, nevermind. I need you to listen to me. You're in a lot of danger, but I'm going to walk you through it.", "What kind of danger?", 13, "Of course.", 0, "You didn't answer my questions. Who are you?", 13);
+  scenes[13] = new Scene(13, "...", "Are you talking to someone?", 14, "What's going on?", 14);
+  scenes[14] = new Scene(14, "We don't have time for this. I promise I'll answer all your questions in a moment.", "Of course", 0, "I think I deserve to know what's going on.", 15);
+  scenes[15] = new Scene(15, "It wasn't a request. WE DON'T HAVE TIME. I WILL get you out of this, amnesia or not.", "Wait--", 0); 
+  scenes[16] = new Scene(16, "Don't worry, you're ok. We'll just try this again.", "What? I thought I was in danger!", 0, "How could you have saved me?", 0, "I really, really want an explination. Now.", 0);
+  scenes[17] = new Scene(17, "You don't...look, Eva, please work with me here. You're in a lot of danger, and my job is to walk you through getting out.", "What kind of danger?", 18, "Should I remember?", 19, "I don't have any reason to trust you.", 14);
+  scenes[18] = new Scene(18, "I'll tell you what you need in a second. Everything else comes after we keep you from dying.", "Okay...what do I have to do?", 0, "I still don't understand where I am.", 15);
+  scenes[19] = new Scene(19, "Yes, you bloody well should remember. I'll tell you everything in a second, just pay attention now.", "Okay.", 0, "Is there ANYONE else I can talk to?", 13); 
+  scenes[20] = new Scene(20, 21, "You sure she can't hear us?", "Of course.");
+  scenes[21] = new Scene(21, 22, "...");
+  scenes[22] = new Scene(22, 23, "Please don't beat yourself up over what happened. It wasn't your fault.", "Don't patronize me. Not my FAULT? This, if nothing else, was sure as hell my fault.");
+  scenes[23] = new Scene(23, 24, "I need you to calm down. The worst thing you can do is panic.", "She's damaged. She could have been KILLED! Did you see, at ALL, what just happened? She lost more than immediate memory, she she has no idea where sh--");
+  scenes[24] = new Scene(24, 25, "How do you know she's not just--", "That is not how ANYONE sees the world. She can't even conceptualize her own body, she's looking DOWN from our survaillence - as if she was just ...floating --");
+  scenes[25] = new Scene(25, 26, "Look at me.", "...", "She is not insane. It's not your fault. And you know what? This might just be what we need."); 
+  scenes[26] = new Scene(26, 27, "Look at what she just did! Look at how easy it was for her!", "What? I can't believe you would even -", "So you would weigh her life over everyone else's?"); 
+  scenes[27] = new Scene(27, 28, "All I need is for you to work with me. Please don't panic.", "Easier said than done!", "The Overisight Council won't know a thing. Give her some idea of the stakes, and I'll keep working on the tech side.");
+  scenes[28] = new Scene(28, 29, "We WILL save the program. We WILL save the Union. And who knows? We might even be able to save her.");
+  scenes[29] = new FinalScene(29); 
+  scenes[30] = new Scene(30, "...", "Why won't you answer?", 0, "Isn't this your job?", 0, "Have you considered how terrifying this is?", 0); 
+  
+
+  pastScenes.add(scenes[1]);
+  note1 = new Note(300, 35, 350, 100, "Test test test test test test test test test test test", 100, 20);
+  
+  notes = new ArrayList<Note>();
+
+
+  for (int i = 0; i < starLength; i ++) { //Initialize floaters and buttons
     nebula[i] = new Star();
   }
   for (int i = 0; i < 10; i ++) {
     blinkers[i] = new Blinker();
   }
   startButton = new Button(500, 400, 400, 100, "Start");
-  //400, 525, 600
+ 	
   buttonOne = new ClearButton(75, 335, 850, 100);
   buttonTwo = new ClearButton(75, 460, 850, 100);
   buttonThree = new ClearButton(75, 580, 850, 100);
@@ -118,18 +111,16 @@ public void setup()
 
 public void draw() {
 
-  
-
   if (game) { // GAME CODE
     background(0); // Showing game elements
     keyActions();
   
-    if (asteroids.size() == 0) {
+    if (asteroids.size() == 0) { //Jumps to next scene if Asteroids eliminated. 
       replaceScene(20);
       game = false; dialouge = true;
     }
 
-    for (int i = 0; i < starLength; i ++) {
+    for (int i = 0; i < starLength; i ++) { //Showing floaters. 
       nebula[i].show();
     }
     normandy.move();
@@ -186,13 +177,13 @@ public void draw() {
     text("Click to 'play' - (even though it's not really a game yet)", 100, 600);
     startButton.show();
   } else if (dialouge) { //Shows scenes if scene is true
-    scenes.get(0).show();
-    if (scenes.get(0).getAnswerNum() == 1 ) {
+    pastScenes.get(0).show();
+    if (pastScenes.get(0).getAnswerNum() == 1 ) {
       ((ClearButton)(buttonOne)).show();
-    } else if ( scenes.get(0).getAnswerNum() == 2  ) {
+    } else if ( pastScenes.get(0).getAnswerNum() == 2  ) {
       ((ClearButton)(buttonOne)).show();
       ((ClearButton)(buttonTwo)).show();
-    } else if ( scenes.get(0).getAnswerNum() == 3 ) {
+    } else if ( pastScenes.get(0).getAnswerNum() == 3 ) {
       ((ClearButton)(buttonOne)).show();
       ((ClearButton)(buttonTwo)).show();
       ((ClearButton)(buttonThree)).show();
@@ -200,9 +191,8 @@ public void draw() {
   }
 }
  
-class SpaceShip extends Floater implements Floatable
+class SpaceShip extends Floater 
 {   
-    //your code here
     public void setX(int x) {myCenterX = x;}
     public int getX() {return (int)myCenterX;}
     public void setY(int y) {myCenterY = y;}
@@ -232,7 +222,7 @@ class SpaceShip extends Floater implements Floatable
       myPointDirection = 0;
     }
 
-    public void accelerate(float accelMod) {
+    public void accelerate(float accelMod) { //If speed is over limit, doesn't accelerate and drops speed to one less than limit. 
       int limit = 6;
       if ( (myDirectionX < limit && myDirectionX > -limit) && (myDirectionY > -limit && myDirectionY < limit) ) {
         super.accelerate(accelMod);
@@ -272,22 +262,17 @@ class Star
 
 }
 
-class Blinker extends Floater implements Floatable
+class Blinker extends Floater 
 {
   int timeCounter;
   public Blinker()
   {
     corners = 4;
-    xCorners = new int[4];
-    yCorners = new int[4];
-    xCorners[0] = 3;
-    xCorners[1] = 0;
-    xCorners[2] = -3;
-    xCorners[3] = 0;
-    yCorners[0] = 0;
-    yCorners[1] = -3;
-    yCorners[2] = 0;
-    yCorners[3] = 3;
+
+    int[] setXArray = {3, 0, -3, 0};
+    int[] setYArray = {0, -3, 0, 3};
+    xCorners = setXArray;
+    yCorners = setYArray;
 
     myColor = color(0, 0, 255);
     myCenterX = -10;
@@ -309,7 +294,7 @@ class Blinker extends Floater implements Floatable
   public double getPointDirection() {return myPointDirection;}
 
   public void move() {
-    if (blink && (Math.random() > .9f)   ) {
+    if (blink && (Math.random() > .9f)   ) { //When created, blinkers shoot off in the opposite direction. 
       myCenterX = normandy.getX();
       myCenterY = normandy.getY();
       myPointDirection = normandy.getPointDirection() - 180;      
@@ -322,7 +307,7 @@ class Blinker extends Floater implements Floatable
     myCenterX += myDirectionX;    
     myCenterY += myDirectionY;     
     }
-    if(myCenterX >width) {     
+    if(myCenterX >width) { //Hides if go offscreen. 
       myCenterX = 0;    
     } else if (myCenterX<0) {     
       myCenterX = width;    
@@ -338,17 +323,17 @@ class Blinker extends Floater implements Floatable
   public void show() {
     double plumeLength = sqrt( (float)( normandy.myDirectionY*normandy.myDirectionY ) + (float)( normandy.myDirectionX * normandy.myDirectionX ) );
 
-    if (timeCounter < (int)plumeLength*4) {
+    if (timeCounter < (int)plumeLength*4) { //Onyl shows if the timecounter hasn't run out yet. 
       super.show();
     }
   }
 }
 
-class Asteroid extends Floater implements Floatable
+class Asteroid extends Floater 
 {
   private double myRotSpeed;
   private int sizeMult;
-  public Asteroid()
+  public Asteroid() //Creates an arbitrary asteroid. 
   {
     sizeMult = (int)(Math.random()*5 + 1);
     corners = 6;
@@ -360,7 +345,7 @@ class Asteroid extends Floater implements Floatable
     yCorners = setYArray;
 
     myColor = color(0, 0, 255, 100);
-    myCenterX = 0;//Math.random()*width;
+    myCenterX = 0;
     myCenterY = Math.random()*height;
     myDirectionX = (Math.random()*3)-1.5f;
     myDirectionY = (Math.random()*3)-1.5f;
@@ -368,7 +353,7 @@ class Asteroid extends Floater implements Floatable
 
     myRotSpeed = (Math.random()*6)-3;
   }
-  public Asteroid(double x, double y, int siz) {
+  public Asteroid(double x, double y, int siz) { //Creates a specific asteroid.
     sizeMult = siz;
     corners = 6;
 
@@ -401,7 +386,7 @@ class Asteroid extends Floater implements Floatable
   public int getSizeMult() {return sizeMult;}
 
 
-  public void move() {
+  public void move() { //Same move but with rotate. 
     rotate( (int)myRotSpeed );
     super.move();
   }
@@ -417,9 +402,7 @@ public class Bullet extends Floater {
     myDirectionX = (5*(Math.cos(dRadians))) + n.getDirectionX();
     myDirectionY = (5*(Math.sin(dRadians))) + n.getDirectionY();
     corners = 4;
-
-    //int[] setXArray = {0, 4, 4, -4, -4};
-    //int[] setYArray = {8, 4, -4, -4, 4};    
+  
     int[] setXArray = {4, -4, -4, 4};
     int[] setYArray = {-2, -2, 2, 2};
 
@@ -442,7 +425,7 @@ public class Bullet extends Floater {
     myCenterX += myDirectionX;    
     myCenterY += myDirectionY;   
 
-    if (myCenterX >width || myCenterX<0 || myCenterY >height || myCenterY < 0) {     
+    if (myCenterX >width || myCenterX<0 || myCenterY >height || myCenterY < 0) { //If it goes offscreen, remove it from the arraylist. 
       bullets.remove(this);
     }
   }
@@ -527,14 +510,7 @@ abstract class Floater //Do NOT modify the Floater class! Make changes in the Sp
   }   
 } 
 
-interface Floatable
-{
-  public void move();
-  public void show();
-}
-
-
-abstract class TextBoundary
+abstract class TextBoundary //Basic aspects of a button or note. 
 {
   protected int myX, myY, myWidth, myHeight, myRightBound, myBottomBound;
   protected String myText;
@@ -542,18 +518,10 @@ abstract class TextBoundary
     myX = 0; myY = 0; myWidth = 0; myHeight = 0; myText = "test";
   }
   public TextBoundary(int x, int y, int wid, int hgt) {
-    myX = x;
-    myY = y;
-    myWidth = wid;
-    myHeight = hgt;
-    myText = "Delete";
+    myX = x; myY = y; myWidth = wid; myHeight = hgt; myText = "Delete";
   }
   public TextBoundary(int x, int y, int wid, int hgt, String txt) {
-    myX = x;
-    myY = y;
-    myWidth = wid;
-    myHeight = hgt;
-    myText = txt;
+    myX = x; myY = y; myWidth = wid; myHeight = hgt; myText = txt;
   }
  
   public void setX(int x) {myX = x;}
@@ -573,11 +541,7 @@ public class Button extends TextBoundary
   
   public Button() {}
   public Button(int x, int y, int wid, int hgt, String txt) {
-    myX = x;
-    myY = y;
-    myWidth = wid;
-    myHeight = hgt;
-    myText = txt;
+    myX = x; myY = y; myWidth = wid; myHeight = hgt; myText = txt;
   }
 
   public void show() {
@@ -593,7 +557,7 @@ public class Button extends TextBoundary
   }
 }
 
-class ClearButton extends Button{
+class ClearButton extends Button{ //Like a button but invisible b/s text and mouseover. 
   public ClearButton(int x, int y, int wid, int hgt) {
     myX = x;
     myY = y;
@@ -616,7 +580,7 @@ class ClearButton extends Button{
   }
 }
 
-public class Note extends TextBoundary
+public class Note extends TextBoundary //On-screen. Triggered through Scripts. 
 {
   int textColor, triggerPoint; 
   public Note() {}
@@ -638,7 +602,6 @@ public class Note extends TextBoundary
       stroke(textColor);
       textSize(20);
       text(myText, myX + 10, myY + 10, myWidth - 10, myHeight - 10);
-      
     }
   }
 }
@@ -712,7 +675,6 @@ public class Scene
   public void show() {
     background(0);
     textSize(40);
-    //fill(0, 255, 0);
     fill(0, 0, 255);
 
     if (textBoxNum == 1) {
@@ -725,7 +687,6 @@ public class Scene
       text("USER CL-42-12", 100, 80);
       textSize(40);
       text(myTextOne, 100, 100, 800, 400);
-      //fill(160, 50, 168);
       textSize(8);
       text("USER AN-71-14", 100, 280);
       textSize(40);
@@ -735,12 +696,10 @@ public class Scene
       text("USER CL-42-12", 100, 80);
       textSize(40);
       text(myTextOne, 100, 100, 800, 400);
-      //fill(0, 0, 255);
       textSize(8);
       text("USER AN-71-14", 100, 280);
       textSize(40);
       text(myTextTwo, 100, 300, 800, 400);
-      //fill(0, 255, 0);
       textSize(8);
       text("USER CL-42-12", 100, 480);
       textSize(40);
@@ -758,13 +717,13 @@ public class Scene
       text(choiceOneText, 100, 400);
       text(choiceTwoText, 100, 525);
     } else if (answerNum == 3) {
-      text(choiceOneText, 100, 400 /*600, 100*/);
-      text(choiceTwoText, 100, 525 /*600, 100*/);
-      text(choiceThreeText, 100, 650 /*600, 100*/);
+      text(choiceOneText, 100, 400);
+      text(choiceTwoText, 100, 525);
+      text(choiceThreeText, 100, 650);
     }
   }
 
-  public void triggerNextScene() {
+  public void triggerNextScene() { //Reads which button was pressed, takes information on where to go from constructor and thus triggers replaceScene
 
       int chc = 9;
 
@@ -784,7 +743,7 @@ public class Scene
   }
 }
 
-public class FinalScene extends Scene
+public class FinalScene extends Scene //Scene but with slightly different draw mode, used only once. 
 {
 	FinalScene(int indx) {
 		myIndex = indx;
@@ -811,7 +770,7 @@ public void keyPressed() {
   if (key == 'd' || key =='D') {dIsPressed = true;}
   if (key == 'w' || key == 'W') {wIsPressed = true;} 
   if (key == 's' || key == 'S') {sIsPressed = true;}
-  if (key == 'q' || key == 'Q') {
+  if (key == 'q' || key == 'Q') { //Hyperspace
     normandy.setX((int)(Math.random()*width));
     normandy.setY((int)(Math.random()*height));
     normandy.setPointDirection((int)(Math.random()*360));
@@ -856,32 +815,23 @@ public void keyActions() {  // S is also set to do forwards.
 }
 
 public void mousePressed() {
-  if (menu && checkIfInside(startButton) ) {
+  if (menu && checkIfInside(startButton) ) { //If it's the menu, goes straight to the next scene. 
     menu = false;
     dialouge = true;
   } else if (dialouge) {  
-      scenes.get(0).triggerNextScene();
+      pastScenes.get(0).triggerNextScene(); //If it's the scenes, runs current scenes's triggerNextScene
   }
 }
 
-public boolean checkIfInside(Button b) {
+public boolean checkIfInside(Button b) { //Checks if mouse is inside a given button. 
   if (mouseX > b.getX() && mouseX < ( b.getX() + b.getWidth() ) && mouseY > b.getY() && mouseY < (b.getY() + b.getHeight() ) ) {
     return true;
   } else {
     return false;
   }
 }
-/*
-public boolean asteroidSpaceShipCollision(int i) {
-  float checkCollision = dist( normandy.getX(), normandy.getY(), asteroids.get(i).getX(), asteroids.get(i).getY());
-      if (checkCollision < (25*asteroids.get(i).getSizeMult()) && gameCounter > 10) {
-        return true;
-      }
-  return false;
-}
-*/
 
-public boolean asteroidSpaceShipCollision(int dis) {
+public boolean asteroidSpaceShipCollision(int dis) { //Checks to see if spaceship is within x distance of an asteroid. 
   for (int i = 0; i < asteroids.size(); i ++) {
     float checkCollision = dist( normandy.getX(), normandy.getY(), asteroids.get(i).getX(), asteroids.get(i).getY());
     if (checkCollision < (dis*asteroids.get(i).getSizeMult()) && gameCounter > 10) {
@@ -891,7 +841,7 @@ public boolean asteroidSpaceShipCollision(int dis) {
   return false;
 }
 
-public boolean asteroidSpaceShipCollision() {
+public boolean asteroidSpaceShipCollision() { //Same, but x = 25
   for (int i = 0; i < asteroids.size(); i ++) {
     float checkCollision = dist( normandy.getX(), normandy.getY(), asteroids.get(i).getX(), asteroids.get(i).getY());
     if (checkCollision < (25*asteroids.get(i).getSizeMult()) && gameCounter > 10) {
@@ -903,29 +853,19 @@ public boolean asteroidSpaceShipCollision() {
 
 
 
-public void deathActions() {
+public void deathActions() { //Enters new scenes when player dies. Depends on which death it is. 
   if (deathCounter == 1) {
-    for (int i = 0; i < scenes.size(); i ++) {
-      if (scenes.get(i).getIndex() == 30) {
-        scenes.add(0, scenes.remove(i));
-      }
-    }
+    replaceScene(30);
   } else {
-    for (int i = 0; i < scenes.size(); i ++) {
-      if (scenes.get(i).getIndex() == 16) {
-        scenes.add(0, scenes.remove(i));
-      }
-    }
+    replaceScene(16);
   }
 
   // Add more based on what scene you go to after each death.
+  // Add based on most recent scene. 
   deathCounter++;
 }
 
-public void gameSetup() {
-  //Find most recent scene, and from that scene extrapolate conditions on whcih level you're going into.   
-  /*normandy.setX( (int)(Math.random()*width) );
-  normandy.setY( (int)(Math.random()*height) );*/
+public void gameSetup() { //Sets up game objects. 
   normandy.setX(width/2);
   normandy.setY(height/2);
   normandy.setDirectionX(0);
@@ -941,10 +881,10 @@ public void gameSetup() {
   }
 }
 
-public void replaceScene(int chc) {
-  for (int i = 0; i < scenes.size(); i ++) {
-    if (scenes.get(i).getIndex() == chc) {
-        scenes.add(0, scenes.remove(i));
+public void replaceScene(int chc) { //Searches through scenes, finds the one needed, deletes it from it's current position and adds it to the scene arraylist.
+  for (int i = 0; i < scenes.length; i ++) {
+    if (scenes[i].getIndex() == chc) {
+        pastScenes.add(0, scenes[i]);
       }
   }
 }
