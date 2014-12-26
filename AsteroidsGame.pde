@@ -13,7 +13,7 @@ Scene[] scenes;
 ArrayList <Note> notes;
 
 Note note1;
-int gameCounter, deathCounter;
+int gameCounter, deathCounter, noteCounter;
 ArrayList <Bullet> bullets;
 
 
@@ -61,11 +61,11 @@ public void setup()
   scenes[17] = new Scene(17, "You don't...look, Eva, please work with me here. You're in a lot of danger, and my job is to walk you through getting out.", "What kind of danger?", 18, "Should I remember?", 19, "I don't have any reason to trust you.", 14);
   scenes[18] = new Scene(18, "I'll tell you what you need in a second. Everything else comes after we keep you from dying.", "Okay...what do I have to do?", 0, "I still don't understand where I am.", 15);
   scenes[19] = new Scene(19, "Yes, you bloody well should remember. I'll tell you everything in a second, just pay attention now.", "Okay.", 0, "Is there ANYONE else I can talk to?", 13); 
-  scenes[20] = new Scene(20, 21, "You sure she can't hear us?", "Of course.");
+  scenes[20] = new Scene(20, 21, "You sure she can't hear us?", "Of course.", 117);
   scenes[21] = new Scene(21, 22, "...");
-  scenes[22] = new Scene(22, 23, "Please don't beat yourself up over what happened. It wasn't your fault.", "Don't patronize me. Not my FAULT? This, if nothing else, was sure as hell my fault.");
-  scenes[23] = new Scene(23, 24, "I need you to calm down. The worst thing you can do is panic.", "She's damaged. She could have been KILLED! Did you see, at ALL, what just happened? She lost more than immediate memory, she she has no idea where sh--");
-  scenes[24] = new Scene(24, 25, "How do you know she's not just--", "That is not how ANYONE sees the world. She can't even conceptualize her own body, she's looking DOWN from our survaillence - as if she was just ...floating --");
+  scenes[22] = new Scene(22, 23, "Please don't beat yourself up over what happened. It wasn't your fault.", "Don't patronize me. Not my FAULT? This, if nothing else, was sure as hell my fault.", 117);
+  scenes[23] = new Scene(23, 24, "I need you to calm down. The worst thing you can do is panic.", "She's damaged. She could have been KILLED! Did you see, at ALL, what just happened? She lost more than immediate memory, she she has no idea where sh--", 117);
+  scenes[24] = new Scene(24, 25, "How do you know she's not just--", "That is not how ANYONE sees the world. She can't even conceptualize her own body, she's looking DOWN from our survaillence - as if she was just ...floating --", 117);
   scenes[25] = new Scene(25, 26, "Look at me.", "...", "She is not insane. It's not your fault. And you know what? This might just be what we need."); 
   scenes[26] = new Scene(26, 27, "Look at what she just did! Look at how easy it was for her!", "What? I can't believe you would even -", "So you would weigh her life over everyone else's?"); 
   scenes[27] = new Scene(27, 28, "All I need is for you to work with me. Please don't panic.", "Easier said than done!", "The Overisight Council won't know a thing. Give her some idea of the stakes, and I'll keep working on the tech side.");
@@ -94,10 +94,9 @@ public void setup()
 }
 
 public void draw() {
-
   if (game) { // GAME CODE
     background(0); // Showing game elements
-    keyActions();
+    if (!togglePause) {keyActions();}
   
     if (asteroids.size() == 0) { //Jumps to next scene if Asteroids eliminated. 
       replaceScene(20);
@@ -107,11 +106,11 @@ public void draw() {
     for (int i = 0; i < starLength; i ++) { //Showing floaters. 
       nebula[i].show();
     }
-    normandy.move();
+    if (!togglePause) {normandy.move();}
     normandy.show();
     for (int i = 0; i < bullets.size(); i ++) {
       bullets.get(i).show();
-      bullets.get(i).move();
+      if (!togglePause) {bullets.get(i).move();}
     }
 
     outer:
@@ -137,13 +136,26 @@ public void draw() {
         deathActions();
     }  
     for (int i = 0; i < asteroids.size(); i ++) {
-      asteroids.get(i).move();
+      if (!togglePause) {asteroids.get(i).move();}
       asteroids.get(i).show();
     }
     for (int i = 0; i < blinkers.length; i ++) {
-      blinkers[i].move();
+      if (!togglePause) {blinkers[i].move();}
       blinkers[i].show();
     }
+
+    if (togglePause) {
+      fill(0, 0, 255, 80);
+      rect(0, 0, width, height);
+      textSize(40);
+      fill(0, 0, 255, 255);
+      text("GAME IS PAUSED", width/3, height*5/6);
+      textSize(10);
+      text("Press P or 'Next' to continue.", width/2 - 80, height*5/6 + 40);
+      pauseActions();
+    }
+
+
     gameCounter ++; //Advances a counter each turn. 
     /*if (gameCounter > 400) {
       note1.show();
@@ -607,7 +619,7 @@ public class Scene
     choiceOne = chc1; choiceTwo = -1; choiceThree = -1; choiceOneText = "na"; choiceTwoText = "na"; choiceThreeText = "na"; 
     answerNum = 0; textBoxNum = 3;
   }
-  public Scene(int index, int chc1, String txt1, String txt2) {
+  public Scene(int index, int chc1, String txt1, String txt2, int rNum) {
     myIndex = index; myTextOne = txt1; myTextTwo = txt2; myTextThree = "na"; 
     choiceOne = chc1; choiceTwo = -1; choiceThree = -1; choiceOneText = "na"; choiceTwoText = "na"; choiceThreeText = "na"; 
     answerNum = 0; textBoxNum = 2;
@@ -771,9 +783,10 @@ public void keyPressed() {
 
 public void keyReleased() {
   if (key == 'a' || key == 'A') {aIsPressed = false;}
-  if (key == 'd' || key =='D') {dIsPressed = false;} 
+  if (key == 'd' || key == 'D') {dIsPressed = false;} 
   if (key == 'w' || key == 'W') {wIsPressed = false;} 
   if (key == 's' || key == 'S') {sIsPressed = false;} 
+  if (key == 'p' || key == 'P') {togglePause = !togglePause;}
   if (keyCode == 32) {spaceIsPressed = false;}
 }
 
@@ -792,9 +805,9 @@ public void keyActions() {  // S is also set to do forwards.
   if (dIsPressed) {
     normandy.rotate(8);
   } 
-  if (pIsPressed) {
+  /*if (pIsPressed) {
     togglePause = !togglePause;
-  }
+  }*/
 
 }
 
@@ -873,20 +886,45 @@ public void replaceScene(int chc) { //Searches through scenes, finds the one nee
   }
 }
 
+public boolean checkLastScene(int indx) {
+  if (pastScenes.get(0).getIndex() == indx) {
+    return true;
+  }
+  return false;
+}
 
-public void scriptedActions() {
+public int checkPastScene(int indx) {
+  for (int i = 0; i < pastScenes.size(); i ++) {
+    if (pastScenes.get(i).getIndex() == indx) {
+      return pastScenes.get(i).getIndex();
+    }
+  }
+  return 0;
+}
+
+public void pauseActions() {
 	//Lots of triggers, lots of events. 
+  if (checkLastScene(9) || checkLastScene(15)) {
+    if (noteCounter == 1) {
+      note1.show();
+    }  
+      
+  }
 }
 //TO DO
 /*
 
 Choices effect final dialouge. 
+  Notes have next and last buttons.
+  Notes also have indexes. 
+  noteCounter says which note this is so far in convo. Mouseclicked inside buttons adds to it. Reset in resetGame. 
+  If deathcounter == 0 in resetGame, also adds notes.
 
 
 
 Implement pause scene (noLoop when turned on) for pause and instructions. Scripting works how? Possibly stops Asteroid motion, doesn't build them, a massive if-then tree which buildGame taps into to initialize certain variables, and then there's a function that controls all of this, dep. on variables and gameCounter
 
-Set up second array of "passed scenes"
+
 
 2 menu buttons, one for story, one straight to game
 
@@ -898,7 +936,8 @@ Only allow scene change after a pause, to stop double clicks?
 
 Clean-up
 
-
+ASK MR. SIMON
+Is there some other way to deal with extra methods besides adding a pointless parameter?
 
 LONG - TERM
 Figure out people's names in convo so that they can speak in different orders. 
@@ -908,6 +947,8 @@ Make hyperspace a limited resource later on, a way to escape a crisis. Powerups?
 Hyperspace doesn't drop you on an asteroid. 
 A version where shooting doubles number of asteroids, but not necessarily smaller. 
 Smaller text fits.
+Level select. 
+Larger maps.
 
 COMPLETED
 Change the shape of the spaceship. Diamond with two wings. YAY!
@@ -928,4 +969,6 @@ Names/labels YAY
 Scene ending so far. YAY
 Function upon all asteroids gone that triggers congrats scene. YAY
 Make sure the simultanious key presses are dealt with. YAY
+Set up second array of "passed scenes" YAY
+Bugfix the last scene. YAY
 */
