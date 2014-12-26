@@ -6,13 +6,12 @@ int starLength;
 boolean blink, doneBlinking;
 Blinker[] blinkers;
 boolean menu, game, dialouge;
-boolean togglePause;
+boolean togglePause, firstBuild;
 Button startButton, buttonOne, buttonTwo, buttonThree;
 ArrayList <Scene> /*scenes,*/ pastScenes;
 Scene[] scenes;
-ArrayList <Note> notes;
-
-Note note1;
+Note[] notes;
+ArrayList <Note> pastNotes;
 int gameCounter, deathCounter, noteCounter;
 ArrayList <Bullet> bullets;
 
@@ -26,6 +25,8 @@ public void setup()
   menu = true;
   togglePause = false;
   gameCounter = 0;
+  noteCounter = 0;
+  firstBuild = true;
   //game = true;
   
   starLength = 100;//Declare Arrays
@@ -36,8 +37,9 @@ public void setup()
   normandy = new SpaceShip();
 
   pastScenes = new ArrayList <Scene>();
-
-  scenes = new Scene[31];
+  pastNotes = new ArrayList<Note>();
+  scenes = new Scene[33];
+  notes = new Note[9];
   /*for (int i = 0; i < 30; i ++) { //Add Scenes
       scenes.add(new Scene());
   }*/
@@ -72,13 +74,22 @@ public void setup()
   scenes[28] = new Scene(28, 29, "We WILL save the program. We WILL save the Union. And who knows? We might even be able to save her.");
   scenes[29] = new FinalScene(29); 
   scenes[30] = new Scene(30, "...", "Why won't you answer?", 0, "Isn't this your job?", 0, "Have you considered how terrifying this is?", 0); 
+  scenes[31] = new Scene(31, "Do you see why we were in a hurry? You were overwhelmed!", "Okay, fine. I'm sorry.", 32, "Maybe it would have been this way anyway.", 32, "I thought I was supposed to be dead!", 32);
+  scenes[32] = new Scene(32, "We just managed to pull you out of danger. I'll tell you all about it the moment we have time to talk.", "Got it. I'm ready.", 0, "And what if I keep killing myself?", 0);
   
-
   pastScenes.add(scenes[1]);
-  note1 = new Note(300, 35, 350, 100, "Test test test test test test test test test test test", 100, 20);
   
-  notes = new ArrayList<Note>();
+  notes[0] = new Note("Test test test test test test test test test test test", 0, 0);
+  notes[1] = new Note("Okay, let me see. Adam, can you prepare the contingencies?", 1, 2);
+  notes[2] = new Note("Sorry. Now listen carefully.", 2, 3);
+  notes[3] = new Note("Now that you're alert, you should be fine. I'll help if something goes wrong.", 3, 4);
+  notes[4] = new Note("The ship in the middle is you. [Move with WASD]", 4, 5);  
+  notes[5] = new Note("The object in the distance is an asteroid. Touch it and you will die.", 5, 6);
+  notes[6] = new Note("Shoot a large asteroid and it will break apart. [Press space to fire].", 6, 7);
+  notes[7] = new Note("We'll talk more when you're free of immediate danger. Good luck!", 7, 0);
+  notes[8] = new Note("Watch out!", 8, 0); //Remember to ++ notes!
 
+  pastNotes.add(notes[1]);
 
   for (int i = 0; i < starLength; i ++) { //Initialize floaters and buttons
     nebula[i] = new Star();
@@ -94,13 +105,14 @@ public void setup()
 }
 
 public void draw() {
+  System.out.println(pastScenes.get(0).getIndex());
   if (game) { // GAME CODE
     background(0); // Showing game elements
     if (!togglePause) {keyActions();}
   
     if (asteroids.size() == 0) { //Jumps to next scene if Asteroids eliminated. 
       replaceScene(20);
-      game = false; dialouge = true;
+      game = false; dialouge = true; firstBuild = true;
     }
 
     for (int i = 0; i < starLength; i ++) { //Showing floaters. 
@@ -145,21 +157,25 @@ public void draw() {
     }
 
     if (togglePause) {
-      fill(0, 0, 255, 80);
+      fill(0, 0, 255, 60);
       rect(0, 0, width, height);
       textSize(40);
-      fill(0, 0, 255, 255);
-      text("GAME IS PAUSED", width/3, height*5/6);
-      textSize(10);
-      text("Press P or 'Next' to continue.", width/2 - 80, height*5/6 + 40);
-      pauseActions();
+      if (firstBuild) {
+        pauseActions();
+        pastNotes.get(0).show();
+        fill(0, 0, 255, 255);
+        textSize(10);
+        text("Click to continue.", width/2 - 80, height*5/6 + 40);
+      } else { 
+        fill(0, 0, 255, 255);
+        text("GAME IS PAUSED", width/3, height*5/6);
+        textSize(10);
+        text("Press P or 'Next' to continue.", width/2 - 80, height*5/6 + 40);
+      }
     }
 
 
     gameCounter ++; //Advances a counter each turn. 
-    /*if (gameCounter > 400) {
-      note1.show();
-    }*/
     
   } else if (menu) { //Draws the start menu if "menu" is true.
     background(0);
@@ -578,27 +594,41 @@ class ClearButton extends Button{ //Like a button but invisible b/s text and mou
 
 public class Note extends TextBoundary //On-screen. Triggered through Scripts. 
 {
-  int textColor, triggerPoint; 
+  int myIndex, triggeredNote; 
   public Note() {}
-  public Note (int x, int y, int wid, int hgt, String txt, int colr, int trig) {
+  public Note (int x, int y, int wid, int hgt, String txt, int idx, int trig) {
     myX = x;
     myY = y;
     myWidth = wid;
     myHeight = hgt;
     myText = txt;
-    textColor = colr;
-    triggerPoint = trig;
+    myIndex = idx;
+    triggeredNote = trig;
+  }
+  public Note(String txt, int idx, int trig) { //300, 35, 350, 100,
+    myX = 300; myY = 35; myWidth = 350; myHeight = 100;
+    myText = txt; myIndex = idx; triggeredNote = trig;
+  }
+  public void triggerNextNote() {
+    if (triggeredNote == 0) {
+      togglePause = false;
+      firstBuild = false;
+    } else {
+      pastNotes.add(0, notes[triggeredNote]);
+      noteCounter ++;
+    }
+    
   }
   public void show() {
-    if (gameCounter > triggerPoint) {
-      fill(0, 0, 255, 100);
+    /*if (gameCounter > triggerPoint) {*/
+      fill(0, 0, 255);
       noStroke();
       rect(myX, myY, myWidth, myHeight);
       fill(0);
-      stroke(textColor);
+      stroke(0);
       textSize(20);
       text(myText, myX + 10, myY + 10, myWidth - 10, myHeight - 10);
-    }
+    /*}*/
   }
 }
 
@@ -734,8 +764,9 @@ public class Scene
       }
     if (chc == 0) {
       game = true; dialouge = false; gameSetup();
+    } else {
+      replaceScene(chc);
     }
-    replaceScene(chc);
   }
 }
 
@@ -816,11 +847,13 @@ public void mousePressed() {
     menu = false;
     dialouge = true;
   } else if (dialouge) {  
-      pastScenes.get(0).triggerNextScene(); //If it's the scenes, runs current scenes's triggerNextScene
+    pastScenes.get(0).triggerNextScene(); //If it's the scenes, runs current scenes's triggerNextScene
+  } else if (game && togglePause) {
+    pastNotes.get(0).triggerNextNote();
   }
 }
 
-public boolean checkIfInside(Button b) { //Checks if mouse is inside a given button. 
+public boolean checkIfInside(TextBoundary b) { //Checks if mouse is inside a given button. 
   if (mouseX > b.getX() && mouseX < ( b.getX() + b.getWidth() ) && mouseY > b.getY() && mouseY < (b.getY() + b.getHeight() ) ) {
     return true;
   } else {
@@ -851,10 +884,16 @@ public boolean asteroidSpaceShipCollision() { //Same, but x = 25
 
 
 public void deathActions() { //Enters new scenes when player dies. Depends on which death it is. 
-  if (deathCounter == 1) {
-    replaceScene(30);
+  firstBuild = false;
+  int idxCheck = pastScenes.get(0).getIndex();
+  if (idxCheck == 15 || idxCheck == 9) {
+    replaceScene(31);
   } else {
-    replaceScene(16);
+    if (deathCounter == 1) {
+      replaceScene(30);
+    } else {
+      replaceScene(16);
+    }
   }
 
   // Add more based on what scene you go to after each death.
@@ -863,6 +902,10 @@ public void deathActions() { //Enters new scenes when player dies. Depends on wh
 }
 
 public void gameSetup() { //Sets up game objects. 
+  if (firstBuild) {
+    togglePause = true;
+    noteCounter = 0;
+  } 
   normandy.setX(width/2);
   normandy.setY(height/2);
   normandy.setDirectionX(0);
@@ -873,8 +916,13 @@ public void gameSetup() { //Sets up game objects.
   for (int i = asteroids.size(); i > 0; i --) {
     asteroids.remove(0);
   }
-  for (int i = 0; i < 1; i ++) {
-    asteroids.add( new Asteroid() );
+  int idxCheck = pastScenes.get(0).getIndex(); 
+  if ((idxCheck == 15 || idxCheck == 9 || idxCheck == 32)) {
+    for (int i = 0; i < 7; i ++) {asteroids.add(new Asteroid());}
+  } else {
+    for (int i = 0; i < 1; i ++) {
+      asteroids.add( new Asteroid() );
+    }
   }
 }
 
@@ -903,14 +951,15 @@ public int checkPastScene(int indx) {
 }
 
 public void pauseActions() {
-	//Lots of triggers, lots of events. 
-  if (checkLastScene(9) || checkLastScene(15)) {
-    if (noteCounter == 1) {
-      note1.show();
-    }  
-      
+	//Lots of triggers, lots of events.
+  int idxCheck = pastScenes.get(0).getIndex(); 
+  if ((idxCheck == 15 || idxCheck == 9 || idxCheck == 32) && noteCounter == 0 ) {
+    pastNotes.add(0, notes[8]);
+  } else if (noteCounter == 0) {
+    pastNotes.add(0, notes[1]);
   }
 }
+
 //TO DO
 /*
 
@@ -919,12 +968,15 @@ Choices effect final dialouge.
   Notes also have indexes. 
   noteCounter says which note this is so far in convo. Mouseclicked inside buttons adds to it. Reset in resetGame. 
   If deathcounter == 0 in resetGame, also adds notes.
+  Gamesetup has pause as default. 
 
+Better default note constructor. YAY
 
+Index check function returns true if that's the most recent scene. 
 
 Implement pause scene (noLoop when turned on) for pause and instructions. Scripting works how? Possibly stops Asteroid motion, doesn't build them, a massive if-then tree which buildGame taps into to initialize certain variables, and then there's a function that controls all of this, dep. on variables and gameCounter
 
-
+A function that searches through the entire pastScenes to see if something is there, better for deathActions. 
 
 2 menu buttons, one for story, one straight to game
 
@@ -937,9 +989,10 @@ Only allow scene change after a pause, to stop double clicks?
 Clean-up
 
 ASK MR. SIMON
-Is there some other way to deal with extra methods besides adding a pointless parameter?
+Is there some other way to deal with extra methods besides adding a pointless parameter? Can Java tell the differance in order of parameters?
 
 LONG - TERM
+Get rid of indexes entierly and just use their place in the array. 
 Figure out people's names in convo so that they can speak in different orders. 
 Special larger bullets? Laser? Other firing methods?
 Simplify everything into component functions. 
@@ -949,6 +1002,7 @@ A version where shooting doubles number of asteroids, but not necessarily smalle
 Smaller text fits.
 Level select. 
 Larger maps.
+Item pickups also have an associated eventTriggered function and can call pauses and events. 
 
 COMPLETED
 Change the shape of the spaceship. Diamond with two wings. YAY!
@@ -971,4 +1025,23 @@ Function upon all asteroids gone that triggers congrats scene. YAY
 Make sure the simultanious key presses are dealt with. YAY
 Set up second array of "passed scenes" YAY
 Bugfix the last scene. YAY
+
+
+WHAT DO WE ACTUALLY NEED HERE?
+
+Notes display, and player action can jump them forwards and backwards. 
+A note displays based on which scene is in 0 and where noteCounter is along. 
+
+So...I could do the exact same thing as there is for scenes, except...sometimes notes also trigger scripted events. 
+  So then pauseActions could say: if currentNote == x, do y.
+
+
+
+
+
+
+
+
+
+
 */
