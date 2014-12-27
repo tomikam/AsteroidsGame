@@ -12,7 +12,7 @@ ArrayList <Scene> /*scenes,*/ pastScenes;
 Scene[] scenes;
 Note[] notes;
 ArrayList <Note> pastNotes;
-int gameCounter, deathCounter, noteCounter;
+int gameCounter, deathCounter, noteCounter, currentMission;
 ArrayList <Bullet> bullets;
 
 
@@ -26,6 +26,7 @@ public void setup()
   togglePause = false;
   gameCounter = 0;
   noteCounter = 0;
+  currentMission = 0;
   firstBuild = true;
   //game = true;
   
@@ -105,7 +106,7 @@ public void setup()
 }
 
 public void draw() {
-  System.out.println(pastScenes.get(0).getIndex());
+  System.out.println(currentMission);
   if (game) { // GAME CODE
     background(0); // Showing game elements
     if (!togglePause) {keyActions();}
@@ -113,6 +114,7 @@ public void draw() {
     if (asteroids.size() == 0) { //Jumps to next scene if Asteroids eliminated. 
       replaceScene(20);
       game = false; dialouge = true; firstBuild = true;
+      //currentMission ++; //Going to move this later. 
     }
 
     for (int i = 0; i < starLength; i ++) { //Showing floaters. 
@@ -916,10 +918,11 @@ public void gameSetup() { //Sets up game objects.
   for (int i = asteroids.size(); i > 0; i --) {
     asteroids.remove(0);
   }
-  int idxCheck = pastScenes.get(0).getIndex(); 
-  if ((idxCheck == 15 || idxCheck == 9 || idxCheck == 32)) {
+  missionIncrement(); //This only works if there is always a scene between death and new action. 
+  if (currentMission == 1) {
     for (int i = 0; i < 7; i ++) {asteroids.add(new Asteroid());}
-  } else {
+  }
+  if (currentMission == 2) {
     for (int i = 0; i < 1; i ++) {
       asteroids.add( new Asteroid() );
     }
@@ -960,6 +963,15 @@ public void pauseActions() {
   }
 }
 
+public void missionIncrement() {
+  if (checkLastScene(15) || checkLastScene(9)) {
+    currentMission = 1;
+  }
+  if (checkLastScene(5) || checkLastScene(8) || checkLastScene(11) || checkLastScene(12) || checkLastScene(14) || checkLastScene(18) || checkLastScene(19)){
+    currentMission = 2;
+  }
+}
+
 //TO DO
 /*
 
@@ -970,9 +982,9 @@ Choices effect final dialouge.
   If deathcounter == 0 in resetGame, also adds notes.
   Gamesetup has pause as default. 
 
-Better default note constructor. YAY
 
-Index check function returns true if that's the most recent scene. 
+
+Index check function returns true if that's the most recent scene. YAY
 
 Implement pause scene (noLoop when turned on) for pause and instructions. Scripting works how? Possibly stops Asteroid motion, doesn't build them, a massive if-then tree which buildGame taps into to initialize certain variables, and then there's a function that controls all of this, dep. on variables and gameCounter
 
@@ -1025,7 +1037,7 @@ Function upon all asteroids gone that triggers congrats scene. YAY
 Make sure the simultanious key presses are dealt with. YAY
 Set up second array of "passed scenes" YAY
 Bugfix the last scene. YAY
-
+Better default note constructor. YAY
 
 WHAT DO WE ACTUALLY NEED HERE?
 
