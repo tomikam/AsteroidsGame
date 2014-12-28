@@ -55,7 +55,7 @@ public void setup()
 
   pastScenes = new ArrayList <Scene>();
   pastNotes = new ArrayList<Note>();
-  scenes = new Scene[33];
+  scenes = new Scene[40];
   notes = new Note[9];
   /*for (int i = 0; i < 30; i ++) { //Add Scenes
       scenes.add(new Scene());
@@ -93,7 +93,13 @@ public void setup()
   scenes[30] = new Scene(30, "...", "Why won't you answer?", 0, "Isn't this your job?", 0, "Have you considered how terrifying this is?", 0); 
   scenes[31] = new Scene(31, "Do you see why we were in a hurry? You were overwhelmed!", "Okay, fine. I'm sorry.", 32, "Maybe it would have been this way anyway.", 32, "I thought I was supposed to be dead!", 32);
   scenes[32] = new Scene(32, "We just managed to pull you out of danger. I'll tell you all about it the moment we have time to talk.", "Got it. I'm ready.", 0, "And what if I keep killing myself?", 0);
-  
+  scenes[33] = new Scene(33, "Okay, thank goodness that's over. Now I'm happy to answer questions. Maybe you'll remember yourself.", "Where am I and what's going on?", 34, "Who are you?", 40);
+  scenes[34] = new Scene(34, 35, "That's a long story. You're on the far edge of inhabited space in a single-seater spacecraft. A few hours ago you sent in a distress call by the Faster-than-Light ansible. You said that you had discovered something dangerous and then dropped out of contact.");
+  scenes[35] = new Scene(35, 36, "We sent out a network of unarmed survailence probes. Your ship was just discovered, floating in a dangerous asteroid field. At first, we couldn't contact you at all.");
+  scenes[36] = new Scene(36, "We just managed to wake you up.", "So am I still there?", 37, "So now what?", 38, "So where are YOU?", 39);
+  scenes[37] = new Scene(37, 38, "No. Your ship is equipped with a Faster-than-Light skip drive. Although we can't fly your ship from a distance, we activated your skip drive as soon as you were out of danger.");
+  scenes[38] = new Scene(38, 39, "For now, we're trying to get you, one skip at a time, towards more populated space. In the process you might have to defend your ship against local debris until your drive charges.");
+  scenes[39] = new Scene(39, "Any other questions?", "No, that's enough. Thank you.", 50, "So where are YOU?", 40, "Let's go back to the first questions", 33);
   pastScenes.add(scenes[1]);
   
   notes[0] = new Note("Test test test test test test test test test test test", 0, 0);
@@ -122,7 +128,6 @@ public void setup()
 }
 
 public void draw() {
-  System.out.println(currentMission);
   if (game) { // GAME CODE
     background(0); // Showing game elements
     if (!togglePause) {keyActions();}
@@ -899,8 +904,6 @@ public boolean asteroidSpaceShipCollision() { //Same, but x = 25
   return false;
 }
 
-
-
 public void deathActions() { //Enters new scenes when player dies. Depends on which death it is. 
   firstBuild = false;
   int idxCheck = pastScenes.get(0).getIndex();
@@ -991,28 +994,19 @@ public void missionIncrement() {
 //TO DO
 /*
 
-Choices effect final dialouge. 
-  Notes have next and last buttons.
-  Notes also have indexes. 
-  noteCounter says which note this is so far in convo. Mouseclicked inside buttons adds to it. Reset in resetGame. 
-  If deathcounter == 0 in resetGame, also adds notes.
-  Gamesetup has pause as default. 
+Re-do so basic exposition first, then CAN answer questions but also CAN move right along. 
 
+Question-and-answer session with Maria. 
 
+How do you change which scene gets triggered by an action dependant on past events? Could it be an addition to triggerNextScene? triggerNextScene checks to see if there's anything else 
 
-Index check function returns true if that's the most recent scene. YAY
-
-Implement pause scene (noLoop when turned on) for pause and instructions. Scripting works how? Possibly stops Asteroid motion, doesn't build them, a massive if-then tree which buildGame taps into to initialize certain variables, and then there's a function that controls all of this, dep. on variables and gameCounter
-
-A function that searches through the entire pastScenes to see if something is there, better for deathActions. 
+Level Select. 
 
 2 menu buttons, one for story, one straight to game
 
-Shape of Asteroids - right now they mess up collision. Farther collision distance.
-
 Scene-to-scene transition
 
-Only allow scene change after a pause, to stop double clicks?
+
 
 Clean-up
 
@@ -1030,7 +1024,16 @@ A version where shooting doubles number of asteroids, but not necessarily smalle
 Smaller text fits.
 Level select. 
 Larger maps.
-Item pickups also have an associated eventTriggered function and can call pauses and events. 
+Item pickups also have an associated eventTriggered function and can call pauses and events. How 
+Notes have back and forwards buttons. 
+Fun things:
+  "Defense Drones" 
+  "Obstacles"
+  "Radiation fields" - download. 
+
+MAYBE NOT NEEDED?
+Only allow scene change after a pause, to stop double clicks?
+Shape of Asteroids - right now they mess up collision. Farther collision distance.
 
 COMPLETED
 Change the shape of the spaceship. Diamond with two wings. YAY!
@@ -1054,6 +1057,16 @@ Make sure the simultanious key presses are dealt with. YAY
 Set up second array of "passed scenes" YAY
 Bugfix the last scene. YAY
 Better default note constructor. YAY
+Choices effect final dialouge. YAY
+  Notes have next and last buttons.
+  Notes also have indexes. YAY
+  noteCounter says which note this is so far in convo. Mouseclicked inside buttons adds to it. Reset in resetGame. YAY
+  If deathcounter == 0 in resetGame, also adds notes. YAY
+  Gamesetup has pause as default. YAY
+Index check function returns true if that's the most recent scene. YAY
+Implement pause scene (noLoop when turned on) for pause and instructions. Scripting works how? Possibly stops Asteroid motion, doesn't build them, a massive if-then tree which buildGame taps into to initialize certain variables, and then there's a function that controls all of this, dep. on variables and gameCounter
+A function that searches through the entire pastScenes to see if something is there, better for deathActions. YAY
+
 
 WHAT DO WE ACTUALLY NEED HERE?
 
@@ -1062,15 +1075,6 @@ A note displays based on which scene is in 0 and where noteCounter is along.
 
 So...I could do the exact same thing as there is for scenes, except...sometimes notes also trigger scripted events. 
   So then pauseActions could say: if currentNote == x, do y.
-
-
-
-
-
-
-
-
-
 
 */
   static public void main(String[] passedArgs) {
