@@ -39,7 +39,7 @@ public void setup()
 
   pastScenes = new ArrayList <Scene>();
   pastNotes = new ArrayList<Note>();
-  scenes = new Scene[40];
+  scenes = new Scene[48];
   notes = new Note[9];
   /*for (int i = 0; i < 30; i ++) { //Add Scenes
       scenes.add(new Scene());
@@ -77,13 +77,21 @@ public void setup()
   scenes[30] = new Scene(30, "...", "Why won't you answer?", 0, "Isn't this your job?", 0, "Have you considered how terrifying this is?", 0); 
   scenes[31] = new Scene(31, "Do you see why we were in a hurry? You were overwhelmed!", "Okay, fine. I'm sorry.", 32, "Maybe it would have been this way anyway.", 32, "I thought I was supposed to be dead!", 32);
   scenes[32] = new Scene(32, "We just managed to pull you out of danger. I'll tell you all about it the moment we have time to talk.", "Got it. I'm ready.", 0, "And what if I keep killing myself?", 0);
-  scenes[33] = new Scene(33, "Okay, thank goodness that's over. Now I'm happy to answer questions. Maybe you'll remember yourself.", "Where am I and what's going on?", 34, "Who are you?", 40);
+  scenes[33] = new Scene(33, "Okay, thank goodness that's over. Now I'm happy to answer questions. I'm hoping it'll even jog your memory.", "Where am I and what's going on?", 34, "Who are you?", 40, "I already told you, I remember!", 50);
   scenes[34] = new Scene(34, 35, "That's a long story. You're on the far edge of inhabited space in a single-seater spacecraft. A few hours ago you sent in a distress call by the Faster-than-Light ansible. You said that you had discovered something dangerous and then dropped out of contact.");
-  scenes[35] = new Scene(35, 36, "We sent out a network of unarmed survailence probes. Your ship was just discovered, floating in a dangerous asteroid field. At first, we couldn't contact you at all.");
-  scenes[36] = new Scene(36, "We just managed to wake you up.", "So am I still there?", 37, "So now what?", 38, "So where are YOU?", 39);
-  scenes[37] = new Scene(37, 38, "No. Your ship is equipped with a Faster-than-Light skip drive. Although we can't fly your ship from a distance, we activated your skip drive as soon as you were out of danger.");
-  scenes[38] = new Scene(38, 39, "For now, we're trying to get you, one skip at a time, towards more populated space. In the process you might have to defend your ship against local debris until your drive charges.");
-  scenes[39] = new Scene(39, "Any other questions?", "No, that's enough. Thank you.", 50, "So where are YOU?", 40, "Let's go back to the first questions", 33);
+  scenes[35] = new Scene(35, 36, "It was vauge and kind of mysterious, but you seemed threatened enough to justify engaging a whole network of survailence probes. Your ship was just discovered, floating in a dangerous asteroid field. At first, we couldn't contact you at all.");
+  scenes[36] = new Scene(36, "We just managed to wake you up.", "So am I still there?", 37, "So now what?", 38, "So where are YOU?", 47);
+  scenes[37] = new Scene(37, 39, "No. Your ship is equipped with a Faster-than-Light skip drive. Although we can't fly your ship from a distance, we activated your skip drive as soon as you were out of danger.");
+  scenes[38] = new Scene(38, 41, "We still don't know what's wrong with your mind and we probably won't be able to until we get you back to medical help. In the meanwhile, just to be safe, we're directing the basic functions of your ship remotely.");
+  scenes[39] = new Scene(39, 40, "For now, we're trying to get you, one skip at a time, towards more populated space. In the process you might have to defend your ship against local debris until your drive charges.");
+  scenes[40] = new Scene(40, "Any other questions?", "No, that's enough. Thank you.", 50, "So where are YOU?", 47, "What could have hurt my memory?", 50);
+  scenes[41] = new Scene(41, "We're going from one Skip Point to another and getting you towards more populated space.", "Wait. You can fly my ship?", 42, "So where are you, exactly?", 43);
+  scenes[42] = new Scene(42, "Don't worry. Even with the ansible, time lag makes moment-to-moment control impossible, which is why we need you to defend your ship while the drive charges.", "Ok, got it. Thank you.", 50, "Wait. So there are asteroids at EVERY skip point?", 43);
+  scenes[43] = new Scene(43, "Give me a second. This is kind of tough to explain. Well...basically skip points depend on some minimal mass in the area. They aren't just in empty space.", "Oh, ok. That makes sense.", 50, "But why? And couldn't my ship be enough?", 44);
+  scenes[44] = new Scene(44, "I said already I'm not a physics person. You need some significant starting mass to jump-start opening a wormhole, and it's not safe for it to be your ship in case the wormhole goes out of control.", "You just contradicted yourself. If the skip drive is creating a wormhole from mass, then how did we skip when I destoryed all the asteroids?", 45);
+  scenes[45] = new Scene(45, "Because the mass projection wasn't--look. PLEASE ask someone else when you have a moment. I'm a rescue opererator, not a physicist.", "Fine.", 50, "Do you see why I don't trust you?", 46, "I just feel like I would remember somethign like this.", 46);
+  scenes[46] = new Scene(46, "It's not a question of trust. You'll see in a moment that you've moved faster than normal space travel could explain.", "Fine. I'll guess we'll see.", 50);
+  scenes[47] = new Scene(47, "What's a skip drive?", "What?", 48, "Are you testing me?", 49, "It...lets you travel faster than light?", 50);
   pastScenes.add(scenes[1]);
   
   notes[0] = new Note("Test test test test test test test test test test test", 0, 0);
@@ -1014,6 +1022,7 @@ Fun things:
   "Defense Drones" 
   "Obstacles"
   "Radiation fields" - download. 
+Chapter select in main screen. Choices?
 
 MAYBE NOT NEEDED?
 Only allow scene change after a pause, to stop double clicks?
